@@ -86,10 +86,10 @@
 - [x] 🟢 Test with sample data
 
 ### 1.9 Health Module
-- [ ] 🔴 Create HealthModule
-- [ ] 🔴 Implement `GET /healthz` (basic health check)
-- [ ] 🔴 Implement `GET /readyz` (DuckDB + SQLite connectivity check)
-- [ ] 🔴 Add disk space check
+- [x] 🟢 Create HealthModule
+- [x] 🟢 Implement `GET /healthz` (basic health check)
+- [x] 🟢 Implement `GET /readyz` (DuckDB + SQLite connectivity check)
+- [x] 🟢 Add disk space check
 
 ### 1.10 Cerebras API Setup
 - [ ] 🔴 Sign up for Cerebras Cloud (use code: wemakedevs)
