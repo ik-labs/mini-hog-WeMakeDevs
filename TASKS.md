@@ -316,20 +316,20 @@
 - [x] 🟢 Return: enabled (boolean), reason (string)
 
 ### 6.3 SDK Flag Support
-- [ ] 🔴 Add `getFlag(key, defaultValue?)` method to SDK
-- [ ] 🔴 Store flag values in localStorage for persistence
-- [ ] 🔴 Implement fetch from `/ff` endpoint
-- [ ] 🔴 Add callback for flag changes (optional)
+- [x] 🟢 Add `getFlag(key, defaultValue?)` method to SDK
+- [x] 🟢 Store flag values in localStorage for persistence
+- [x] 🟢 Implement fetch from `/ff` endpoint
+- [x] 🟢 Add callback for flag changes (optional)
 
 ### 6.4 Flags Frontend UI
-- [ ] 🔴 Create `/app/flags/page.tsx`
-- [ ] 🔴 Display list of flags in cards/table
-- [ ] 🔴 Show: key, name, active status, rollout %
-- [ ] 🔴 Add "Create Flag" button and modal
-- [ ] 🔴 Add toggle to enable/disable flag
-- [ ] 🔴 Add slider to adjust rollout percentage
-- [ ] 🔴 Add "Test Evaluation" section (enter distinct_id, see result)
-- [ ] 🔴 Add delete confirmation dialog
+- [x] 🟢 Create `/app/flags/page.tsx`
+- [x] 🟢 Display list of flags in cards/table
+- [x] 🟢 Show: key, name, active status, rollout %
+- [x] 🟢 Add "Create Flag" button and modal
+- [x] 🟢 Add toggle to enable/disable flag
+- [x] 🟢 Add slider to adjust rollout percentage
+- [x] 🟢 Add "Test Evaluation" section (enter distinct_id, see result)
+- [x] 🟢 Add delete confirmation dialog
 
 ---
 
