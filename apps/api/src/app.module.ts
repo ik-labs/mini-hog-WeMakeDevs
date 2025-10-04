@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 import { ConfigModule } from './common/config/config.module';
 import { DatabaseModule } from './common/database/database.module';
@@ -10,6 +11,7 @@ import { McpModule } from './mcp/mcp.module';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
+import { ApiKeyGuard } from './auth/guards/api-key.guard';
 
 @Module({
   imports: [
@@ -54,6 +56,11 @@ import { HealthModule } from './health/health.module';
     HealthModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ApiKeyGuard,
+    },
+  ],
 })
 export class AppModule {}

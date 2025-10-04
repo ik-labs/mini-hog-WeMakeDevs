@@ -1,8 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
 import { DuckDbService } from '../common/database/duckdb.service';
 import { SqliteService } from '../common/database/sqlite.service';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('health')
+@Public()
 export class HealthController {
   constructor(
     private readonly duckdb: DuckDbService,

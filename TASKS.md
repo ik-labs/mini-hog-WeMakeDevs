@@ -67,10 +67,10 @@
 - [x] 🟢 Test with sample payloads
 
 ### 1.7 Auth Module
-- [ ] 🔴 Create AuthModule with API key guard
-- [ ] 🔴 Implement API key validation logic
-- [ ] 🔴 Create decorator for @RequireApiKey()
-- [ ] 🔴 Add API key seeding script (generate first key)
+- [x] 🟢 Create AuthModule with API key guard
+- [x] 🟢 Implement API key validation logic
+- [x] 🟢 Create decorator for @RequireApiKey()
+- [x] 🟢 Add API key seeding script (generate first key)
 - [ ] 🔴 Implement rate limiting (optional but recommended)
 
 ### 1.8 Basic Analytics - Insights Module
