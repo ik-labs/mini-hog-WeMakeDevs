@@ -239,8 +239,7 @@ async function sendBatch(events: any[]): Promise<void> {
     throw new Error(`Failed to send batch: ${response.status} ${error}`);
   }
 
-  const result = await response.json();
-  return result;
+  await response.json();
 }
 
 // Main seeding function
