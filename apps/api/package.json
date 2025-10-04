@@ -23,7 +23,8 @@
     "db:studio": "drizzle-kit studio",
     "db:seed": "ts-node src/common/database/seed.ts",
     "db:seed-events": "ts-node src/common/database/seed-events.ts",
-    "test:cerebras": "ts-node src/common/cerebras/test-cerebras.ts"
+    "test:cerebras": "ts-node src/common/cerebras/test-cerebras.ts",
+    "test:ai": "ts-node src/ai/test-ai.ts"
   },
   "dependencies": {
     "@cerebras/cerebras_cloud_sdk": "^1.50.0",
