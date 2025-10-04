@@ -299,21 +299,21 @@
 **Priority:** HIGH - Shows feature completeness
 
 ### 6.1 Flags Backend - CRUD Endpoints
-- [ ] 🔴 Create FlagsModule with controller and service
-- [ ] 🔴 Implement `GET /flags` (list all flags)
-- [ ] 🔴 Implement `POST /flags` (create flag)
-- [ ] 🔴 Implement `GET /flags/:key` (get single flag)
-- [ ] 🔴 Implement `PATCH /flags/:key` (update flag)
-- [ ] 🔴 Implement `DELETE /flags/:key` (delete flag)
-- [ ] 🔴 Add Zod validation for flag payloads
+- [x] 🟢 Create FlagsModule with controller and service
+- [x] 🟢 Implement `GET /flags` (list all flags)
+- [x] 🟢 Implement `POST /flags` (create flag)
+- [x] 🟢 Implement `GET /flags/:key` (get single flag)
+- [x] 🟢 Implement `PATCH /flags/:key` (update flag)
+- [x] 🟢 Implement `DELETE /flags/:key` (delete flag)
+- [x] 🟢 Add Zod validation for flag payloads
 
 ### 6.2 Flag Evaluation Logic
-- [ ] 🔴 Implement deterministic bucketing algorithm (hash-based)
-- [ ] 🔴 Use distinct_id + flag_key for consistent hashing
-- [ ] 🔴 Compare hash to rollout_percentage
-- [ ] 🔴 Implement sticky assignment (store in flag_decisions table)
-- [ ] 🔴 Create `GET /ff?key=...&distinct_id=...` endpoint
-- [ ] 🔴 Return: enabled (boolean), reason (string)
+- [x] 🟢 Implement deterministic bucketing algorithm (hash-based)
+- [x] 🟢 Use distinct_id + flag_key for consistent hashing
+- [x] 🟢 Compare hash to rollout_percentage
+- [x] 🟢 Implement sticky assignment (store in flag_decisions table)
+- [x] 🟢 Create `GET /ff?key=...&distinct_id=...` endpoint
+- [x] 🟢 Return: enabled (boolean), reason (string)
 
 ### 6.3 SDK Flag Support
 - [ ] 🔴 Add `getFlag(key, defaultValue?)` method to SDK
