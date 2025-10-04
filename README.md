@@ -52,7 +52,67 @@ minihog/
 
 ## 🚀 Getting Started
 
-> Full setup instructions coming soon
+### Quick Start
+
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Set Up Environment**
+   ```bash
+   # Get your Cerebras API key from https://cloud.cerebras.ai
+   # Edit apps/api/.env and add your key:
+   nano apps/api/.env
+   ```
+
+3. **Start Backend API**
+   ```bash
+   cd apps/api
+   npm run dev
+   # API runs on http://localhost:3000
+   ```
+
+4. **Find Your API Key**
+   
+   On first startup, the API auto-generates a secure API key. To find it:
+   ```bash
+   sqlite3 data/metadata.db "SELECT key FROM api_keys WHERE active=1;"
+   ```
+   
+   You'll see something like: `mh_live_abc123...`
+   
+   **Save this key!** You'll need it for all API requests.
+
+5. **Start Frontend**
+   ```bash
+   cd apps/web
+   npm run dev
+   # Web UI runs on http://localhost:3001
+   ```
+
+6. **Test Event Ingestion**
+   ```bash
+   # Use the API key from step 4
+   curl -X POST http://localhost:3000/api/ingest/e \
+     -H "Content-Type: application/json" \
+     -H "X-API-Key: YOUR_API_KEY_HERE" \
+     -d '{
+       "events": [{
+         "event": "test",
+         "distinct_id": "user1",
+         "timestamp": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"
+       }]
+     }'
+   ```
+
+### 📚 Detailed Guides
+
+- **Quick Testing (10 min):** See [QUICK_START.md](./QUICK_START.md)
+- **Complete Testing (45 min):** See [MANUAL_TESTING_GUIDE.md](./MANUAL_TESTING_GUIDE.md)
+- **Docker Deployment:** See [DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md)
+- **MCP with Claude Desktop:** See [MCP_SETUP.md](./MCP_SETUP.md)
+- **Test Commands Reference:** See [TEST_COMMANDS.md](./TEST_COMMANDS.md)
 
 ## 📝 License
 

@@ -2,19 +2,41 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+1. **Backend API must be running first!**
+   ```bash
+   cd ../api
+   npm run dev
+   ```
+   API runs on port 3000.
+
+2. **Find Your API Key**
+   
+   The backend auto-generates an API key on first startup. To find it:
+   ```bash
+   # From project root
+   sqlite3 data/metadata.db "SELECT key FROM api_keys WHERE active=1;"
+   ```
+   
+   Example output: `mh_live_bf947c81aa941e864d35a23fd3fe9252`
+   
+   **You'll need this key for the frontend to work!**
+
+3. **Configure Environment**
+   
+   The `.env` file in `apps/api/.env` should have:
+   ```bash
+   CEREBRAS_API_KEY=your_cerebras_key_here
+   ```
+
+### Start Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

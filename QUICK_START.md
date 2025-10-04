@@ -259,6 +259,21 @@ Try these prompts:
 
 ## Troubleshooting
 
+### API Key Issues
+
+**Problem:** Getting `401 Unauthorized` or `Invalid API key`
+
+**Solution:**
+```bash
+# Find your actual API key
+sqlite3 data/metadata.db "SELECT key FROM api_keys WHERE active=1;"
+
+# Copy the output and use it in all curl commands
+# Replace test_api_key_12345 with your actual key
+```
+
+**Note:** The API key in `.env` is only used to seed the database on **first startup**. After that, use the key from the database.
+
 ### Port Already in Use
 ```bash
 # Check what's using port 3000
