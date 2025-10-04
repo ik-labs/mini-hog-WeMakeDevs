@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "minihog": {
+      "command": "node",
+      "args": [
+        "/path/to/minihog/apps/api/dist/mcp-server.js"
+      ],
+      "env": {
+        "NODE_ENV": "production",
+        "DUCKDB_PATH": "/path/to/minihog/data/minihog.duckdb",
+        "SQLITE_PATH": "/path/to/minihog/data/minihog.sqlite",
+        "CEREBRAS_API_KEY": "your-cerebras-api-key-here",
+        "API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
