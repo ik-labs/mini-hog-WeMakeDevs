@@ -54,17 +54,17 @@
 - [x] 🟢 Export constants (event names, time periods)
 
 ### 1.6 Ingest Module (Backend)
-- [ ] 🔴 Create IngestModule with controller and service
-- [ ] 🔴 Implement `POST /e` endpoint (batch events)
-- [ ] 🔴 Add Zod validation for event payloads
-- [ ] 🔴 Implement auto-enrichment (timestamp, received_at)
-- [ ] 🔴 Add UTM parameter extraction
-- [ ] 🔴 Integrate ua-parser-js for user-agent parsing
-- [ ] 🔴 Implement DuckDB event insertion
-- [ ] 🔴 Add request body size limits (1MB max)
-- [ ] 🔴 Create `POST /id` endpoint (identify/alias)
-- [ ] 🔴 Add error handling and validation errors
-- [ ] 🔴 Test with sample payloads
+- [x] 🟢 Create IngestModule with controller and service
+- [x] 🟢 Implement `POST /e` endpoint (batch events)
+- [x] 🟢 Add Zod validation for event payloads
+- [x] 🟢 Implement auto-enrichment (timestamp, received_at)
+- [x] 🟢 Add UTM parameter extraction
+- [x] 🟢 Integrate ua-parser-js for user-agent parsing
+- [x] 🟢 Implement DuckDB event insertion
+- [x] 🟢 Add request body size limits (1MB max)
+- [x] 🟢 Create `POST /id` endpoint (identify/alias)
+- [x] 🟢 Add error handling and validation errors
+- [x] 🟢 Test with sample payloads
 
 ### 1.7 Auth Module
 - [ ] 🔴 Create AuthModule with API key guard
