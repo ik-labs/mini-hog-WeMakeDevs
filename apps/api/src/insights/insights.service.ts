@@ -67,7 +67,7 @@ export class InsightsService {
 
     const series: TimeSeriesDataPoint[] = results.map((row) => ({
       timestamp: row.timestamp,
-      count: row.count,
+      count: Number(row.count),
     }));
 
     const total = series.reduce((sum, point) => sum + point.count, 0);
@@ -117,9 +117,9 @@ export class InsightsService {
     ]);
 
     return {
-      dau: dauResult[0]?.count || 0,
-      wau: wauResult[0]?.count || 0,
-      mau: mauResult[0]?.count || 0,
+      dau: Number(dauResult[0]?.count || 0),
+      wau: Number(wauResult[0]?.count || 0),
+      mau: Number(mauResult[0]?.count || 0),
       period,
       calculated_at: now,
     };
@@ -161,12 +161,12 @@ export class InsightsService {
     }>(sql, params);
 
     // Calculate total for percentages
-    const totalEvents = results.reduce((sum, row) => sum + row.count, 0);
+    const totalEvents = results.reduce((sum, row) => sum + Number(row.count), 0);
 
     const events: TopEvent[] = results.map((row) => ({
       event: row.event,
-      count: row.count,
-      percentage: totalEvents > 0 ? (row.count / totalEvents) * 100 : 0,
+      count: Number(row.count),
+      percentage: totalEvents > 0 ? (Number(row.count) / totalEvents) * 100 : 0,
     }));
 
     return {
