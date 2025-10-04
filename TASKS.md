@@ -338,63 +338,63 @@
 **Priority:** CRITICAL - Docker track requirement
 
 ### 7.1 MCP Module Setup
-- [ ] 🔴 Create McpModule in `/apps/api/src/mcp`
-- [ ] 🔴 Install MCP TypeScript SDK (@modelcontextprotocol/sdk)
-- [ ] 🔴 Create MCP server instance
-- [ ] 🔴 Configure server metadata (name, version, description)
+- [x] 🟢 Create McpModule in `/apps/api/src/mcp`
+- [x] 🟢 Install MCP TypeScript SDK (@modelcontextprotocol/sdk)
+- [x] 🟢 Create MCP server instance
+- [x] 🟢 Configure server metadata (name, version, description)
 
 ### 7.2 MCP Tool 1: get_trend
-- [ ] 🔴 Define tool schema with parameters
-- [ ] 🔴 Implement handler: call InsightsService.getTrends()
-- [ ] 🔴 Format response as required JSON structure
+- [x] 🟢 Define tool schema with parameters
+- [x] 🟢 Implement handler: call InsightsService.getTrends()
+- [x] 🟢 Format response as required JSON structure
 - [ ] 🔴 Test with MCP inspector
 
 ### 7.3 MCP Tool 2: get_active_users
-- [ ] 🔴 Define tool schema
-- [ ] 🔴 Implement handler: call InsightsService.getActiveUsers()
-- [ ] 🔴 Return DAU/WAU/MAU
+- [x] 🟢 Define tool schema
+- [x] 🟢 Implement handler: call InsightsService.getActiveUsers()
+- [x] 🟢 Return DAU/WAU/MAU
 - [ ] 🔴 Test with MCP inspector
 
 ### 7.4 MCP Tool 3: get_top_events
-- [ ] 🔴 Define tool schema with limit parameter
-- [ ] 🔴 Implement handler: query top events from DuckDB
-- [ ] 🔴 Return event names and counts
+- [x] 🟢 Define tool schema with limit parameter
+- [x] 🟢 Implement handler: query top events from DuckDB
+- [x] 🟢 Return event names and counts
 - [ ] 🔴 Test with MCP inspector
 
 ### 7.5 MCP Tool 4: evaluate_flag
-- [ ] 🔴 Define tool schema with distinct_id and flag_key
-- [ ] 🔴 Implement handler: call FlagsService.evaluate()
-- [ ] 🔴 Return enabled + reason
+- [x] 🟢 Define tool schema with distinct_id and flag_key
+- [x] 🟢 Implement handler: call FlagsService.evaluate()
+- [x] 🟢 Return enabled + reason
 - [ ] 🔴 Test with MCP inspector
 
 ### 7.6 MCP Tool 5: get_user_timeline
-- [ ] 🔴 Define tool schema with distinct_id and limit
-- [ ] 🔴 Implement handler: query events for user from DuckDB
-- [ ] 🔴 Return chronological event list
+- [x] 🟢 Define tool schema with distinct_id and limit
+- [x] 🟢 Implement handler: query events for user from DuckDB
+- [x] 🟢 Return chronological event list
 - [ ] 🔴 Test with MCP inspector
 
 ### 7.7 MCP Tool 6: run_query
-- [ ] 🔴 Define tool schema with sql parameter
-- [ ] 🔴 Implement SQL safety validation
-- [ ] 🔴 Execute query on DuckDB
-- [ ] 🔴 Return columns + rows
-- [ ] 🔴 Add error handling for invalid SQL
+- [x] 🟢 Define tool schema with sql parameter
+- [x] 🟢 Implement SQL safety validation
+- [x] 🟢 Execute query on DuckDB
+- [x] 🟢 Return columns + rows
+- [x] 🟢 Add error handling for invalid SQL
 - [ ] 🔴 Test with MCP inspector
 
 ### 7.8 MCP Tool 7: ask_question (Cerebras-powered)
-- [ ] 🔴 Define tool schema with question parameter
-- [ ] 🔴 Implement handler: call AiService.executeNaturalLanguageQuery()
-- [ ] 🔴 Return: question, sql, results, insights, chart_suggestion
-- [ ] 🔴 Ensure Cerebras API is called internally
+- [x] 🟢 Define tool schema with question parameter
+- [x] 🟢 Implement handler: call AiService.executeNaturalLanguageQuery()
+- [x] 🟢 Return: question, sql, results, insights, chart_suggestion
+- [x] 🟢 Ensure Cerebras API is called internally
 - [ ] 🔴 Test with various questions via MCP inspector
 
 ### 7.9 Docker Configuration
-- [ ] 🔴 Create Dockerfile for backend API
-- [ ] 🔴 Create Dockerfile for MCP server (if separate)
-- [ ] 🔴 Create docker-compose.yml with all services
-- [ ] 🔴 Add volume mounts for DuckDB/SQLite persistence
-- [ ] 🔴 Configure environment variables in docker-compose
-- [ ] 🔴 Add healthcheck directives
+- [x] 🟢 Create Dockerfile for backend API
+- [x] 🟢 Create Dockerfile for MCP server (if separate)
+- [x] 🟢 Create docker-compose.yml with all services
+- [x] 🟢 Add volume mounts for DuckDB/SQLite persistence
+- [x] 🟢 Configure environment variables in docker-compose
+- [x] 🟢 Add healthcheck directives
 
 ### 7.10 Docker MCP Gateway Integration
 - [ ] 🔴 Read Docker MCP Gateway documentation

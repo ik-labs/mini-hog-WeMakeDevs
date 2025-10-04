@@ -32,6 +32,7 @@
     "@fastify/cors": "^8.5.0",
     "@fastify/helmet": "^11.1.1",
     "@minihog/shared": "file:../../packages/shared",
+    "@modelcontextprotocol/sdk": "^1.19.1",
     "@nestjs/common": "^10.3.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.3.0",

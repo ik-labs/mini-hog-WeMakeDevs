@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # Backend API
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: minihog-api
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DUCKDB_PATH=/data/minihog.duckdb
+      - SQLITE_PATH=/data/minihog.sqlite
+      - CEREBRAS_API_KEY=${CEREBRAS_API_KEY}
+      - API_KEY=${API_KEY:-your-api-key-here}
+    volumes:
+      - ./data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - minihog-network
+    restart: unless-stopped
+
+  # Frontend Web
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: minihog-web
+    ports:
+      - "3001:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api:3000/api
+      - NEXT_PUBLIC_API_KEY=${API_KEY:-your-api-key-here}
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - minihog-network
+    restart: unless-stopped
+
+  # MCP Server (stdio mode, no ports exposed)
+  mcp:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.mcp
+    container_name: minihog-mcp
+    environment:
+      - NODE_ENV=production
+      - DUCKDB_PATH=/data/minihog.duckdb
+      - SQLITE_PATH=/data/minihog.sqlite
+      - CEREBRAS_API_KEY=${CEREBRAS_API_KEY}
+      - API_KEY=${API_KEY:-your-api-key-here}
+    volumes:
+      - ./data:/data
+    networks:
+      - minihog-network
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+networks:
+  minihog-network:
+    driver: bridge
+
+volumes:
+  data:
