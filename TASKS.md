@@ -30,12 +30,12 @@
 - [x] 🟢 Create basic module structure (ingest, insights, flags, ai, mcp, admin, auth, health)
 
 ### 1.3 Database Setup - DuckDB
-- [ ] 🔴 Install duckdb npm package
-- [ ] 🔴 Create DuckDB connection service
-- [ ] 🔴 Create `events` table schema
-- [ ] 🔴 Add migration/initialization script for DuckDB
-- [ ] 🔴 Test basic INSERT and SELECT operations
-- [ ] 🔴 Add indexes for performance (timestamp, distinct_id, event)
+- [x] 🟢 Install duckdb npm package
+- [x] 🟢 Create DuckDB connection service
+- [x] 🟢 Create `events` table schema
+- [x] 🟢 Add migration/initialization script for DuckDB
+- [x] 🟢 Test basic INSERT and SELECT operations
+- [x] 🟢 Add indexes for performance (timestamp, distinct_id, event)
 
 ### 1.4 Database Setup - SQLite (Metadata)
 - [ ] 🔴 Install better-sqlite3 + drizzle-orm

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 import { ConfigModule } from './common/config/config.module';
+import { DatabaseModule } from './common/database/database.module';
 import { IngestModule } from './ingest/ingest.module';
 import { InsightsModule } from './insights/insights.module';
 import { FlagsModule } from './flags/flags.module';
@@ -14,6 +15,9 @@ import { HealthModule } from './health/health.module';
   imports: [
     // Configuration
     ConfigModule,
+
+    // Database
+    DatabaseModule,
 
     // Logger
     LoggerModule.forRoot({

@@ -1,7 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
+import { DuckDbService } from '../common/database/duckdb.service';
 
 @Controller('health')
 export class HealthController {
+  constructor(private readonly duckdb: DuckDbService) {}
+
   @Get('healthz')
   healthCheck() {
     return {
@@ -12,14 +15,15 @@ export class HealthController {
   }
 
   @Get('readyz')
-  readinessCheck() {
-    // TODO: Check DuckDB and SQLite connectivity
+  async readinessCheck() {
+    const duckdbStatus = await this.duckdb.healthCheck();
+
     return {
-      status: 'ready',
+      status: duckdbStatus ? 'ready' : 'degraded',
       timestamp: new Date().toISOString(),
       checks: {
-        duckdb: 'ok',
-        sqlite: 'ok',
+        duckdb: duckdbStatus ? 'ok' : 'failed',
+        sqlite: 'pending', // TODO: Add SQLite check
       },
     };
   }
