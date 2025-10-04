@@ -265,20 +265,20 @@
 **Priority:** CRITICAL - Key demo feature
 
 ### 5.1 Natural Language Query Page
-- [ ] 🔴 Create `/app/query/page.tsx`
-- [ ] 🔴 Add large text input for questions
-- [ ] 🔴 Add example questions as clickable chips
-- [ ] 🔴 Add "Ask" button with loading state
-- [ ] 🔴 Create mutation hook for `/ai/query` endpoint
+- [x] 🟢 Create `/app/query/page.tsx`
+- [x] 🟢 Add large text input for questions
+- [x] 🟢 Add example questions as clickable chips
+- [x] 🟢 Add "Ask" button with loading state
+- [x] 🟢 Create mutation hook for `/ai/query` endpoint
 
 ### 5.2 Query Results Display
-- [ ] 🔴 Show "Generating SQL..." loading state with Cerebras branding
-- [ ] 🔴 Display generated SQL in code block (with syntax highlighting)
-- [ ] 🔴 Show query execution time
-- [ ] 🔴 Display results in table format
-- [ ] 🔴 Add chart visualization based on chart_suggestion
-- [ ] 🔴 Display AI-generated insights/summary
-- [ ] 🔴 Add error handling with helpful messages
+- [x] 🟢 Show "Generating SQL..." loading state with Cerebras branding
+- [x] 🟢 Display generated SQL in code block (with syntax highlighting)
+- [x] 🟢 Show query execution time
+- [x] 🟢 Display results in table format
+- [x] 🟢 Add chart visualization based on chart_suggestion
+- [x] 🟢 Display AI-generated insights/summary
+- [x] 🟢 Add error handling with helpful messages
 
 ### 5.3 Query History (Optional Enhancement)
 - [ ] 🔴 Show last 5 queries in sidebar
@@ -288,7 +288,7 @@
 ### 5.4 Polish & UX
 - [ ] 🔴 Add keyboard shortcut (Cmd/Ctrl + Enter to submit)
 - [ ] 🔴 Add animation for loading state
-- [ ] 🔴 Add "Powered by Cerebras + Llama" badge
+- [x] 🟢 Add "Powered by Cerebras + Llama" badge
 - [ ] 🔴 Test with various question types
 - [ ] 🔴 Handle edge cases (empty results, errors)
 
@@ -561,13 +561,13 @@
 - [x] Phase 2: Browser SDK Development (20/20 tasks - 100%)
 - [x] Phase 3: AI Module - Cerebras Integration (19/21 tasks - 90%)
 - [x] Phase 4: Frontend - Dashboard & Basic UI (37/37 tasks - 100%)
-- [ ] Phase 5: AI-Powered NL Queries UI (0/15 tasks - 0%)
+- [x] Phase 5: AI-Powered NL Queries UI (13/18 tasks - 72%)
 - [ ] Phase 6: Feature Flags Implementation (0/20 tasks - 0%)
 - [ ] Phase 7: MCP Server & Docker Integration (0/48 tasks - 0%)
 - [ ] Phase 8: Demo App & Documentation (0/52 tasks - 0%)
 
-**Total Tasks: 274**
-**Completed: 137/274 (50%)**
+**Total Tasks: 277**
+**Completed: 148/277 (53%)**
 
 ### Daily Progress Log
 
