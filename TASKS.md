@@ -74,16 +74,16 @@
 - [ ] 🔴 Implement rate limiting (optional but recommended)
 
 ### 1.8 Basic Analytics - Insights Module
-- [ ] 🔴 Create InsightsModule with controller and service
-- [ ] 🔴 Implement `GET /insights/trends` endpoint
-- [ ] 🔴 Add query parameters: event_name, from, to, interval
-- [ ] 🔴 Write DuckDB query for event counts over time
-- [ ] 🔴 Add time grouping logic (hour/day/week)
-- [ ] 🔴 Implement `GET /insights/active-users` (DAU/WAU/MAU)
-- [ ] 🔴 Implement `GET /insights/top-events` with limit parameter
-- [ ] 🔴 Optimize queries with proper WHERE clauses
+- [x] 🟢 Create InsightsModule with controller and service
+- [x] 🟢 Implement `GET /insights/trends` endpoint
+- [x] 🟢 Add query parameters: event_name, from, to, interval
+- [x] 🟢 Write DuckDB query for event counts over time
+- [x] 🟢 Add time grouping logic (hour/day/week)
+- [x] 🟢 Implement `GET /insights/active-users` (DAU/WAU/MAU)
+- [x] 🟢 Implement `GET /insights/top-events` with limit parameter
+- [x] 🟢 Optimize queries with proper WHERE clauses
 - [ ] 🔴 Add query result caching (in-memory, 60s TTL)
-- [ ] 🔴 Test with sample data
+- [x] 🟢 Test with sample data
 
 ### 1.9 Health Module
 - [ ] 🔴 Create HealthModule
