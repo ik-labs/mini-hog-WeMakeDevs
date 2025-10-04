@@ -47,7 +47,7 @@ export interface EventsListResponse {
 export interface QueryResult {
   question: string;
   sql: string;
-  results: unknown[];
+  results: Record<string, unknown>[];
   insights: string;
   chartSuggestion: string;
   executionTime: number;
