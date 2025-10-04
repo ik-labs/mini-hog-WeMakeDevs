@@ -38,13 +38,13 @@
 - [x] 🟢 Add indexes for performance (timestamp, distinct_id, event)
 
 ### 1.4 Database Setup - SQLite (Metadata)
-- [ ] 🔴 Install better-sqlite3 + drizzle-orm
-- [ ] 🔴 Set up Drizzle schema definitions
-- [ ] 🔴 Create `feature_flags` table schema
-- [ ] 🔴 Create `flag_decisions` table schema
-- [ ] 🔴 Create `api_keys` table schema
-- [ ] 🔴 Create migration scripts
-- [ ] 🔴 Test basic CRUD operations
+- [x] 🟢 Install better-sqlite3 + drizzle-orm
+- [x] 🟢 Set up Drizzle schema definitions
+- [x] 🟢 Create `feature_flags` table schema
+- [x] 🟢 Create `flag_decisions` table schema
+- [x] 🟢 Create `api_keys` table schema
+- [x] 🟢 Create migration scripts
+- [x] 🟢 Test basic CRUD operations
 
 ### 1.5 Shared Packages Setup
 - [ ] 🔴 Create `/packages/shared` package
