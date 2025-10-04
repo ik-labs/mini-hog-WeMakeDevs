@@ -1,5 +1,5 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY || '';
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY || 'mh_live_bf947c81aa941e864d35a23fd3fe9252';
 
 export interface Event {
   event: string;
@@ -127,15 +127,15 @@ class ApiClient {
     interval?: 'hour' | 'day' | 'week' | 'month';
   }): Promise<Trend[]> {
     const searchParams = new URLSearchParams(params as Record<string, string>);
-    return this.request<Trend[]>(`/analytics/trends?${searchParams}`);
+    return this.request<Trend[]>(`/insights/trends?${searchParams}`);
   }
 
   async getActiveUsers(): Promise<ActiveUsers> {
-    return this.request<ActiveUsers>('/analytics/active-users');
+    return this.request<ActiveUsers>('/insights/active-users');
   }
 
   async getTopEvents(limit = 10): Promise<TopEvent[]> {
-    return this.request<TopEvent[]>(`/analytics/top-events?limit=${limit}`);
+    return this.request<TopEvent[]>(`/insights/top-events?limit=${limit}`);
   }
 
   async getEvents(params?: {
