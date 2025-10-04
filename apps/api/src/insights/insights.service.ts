@@ -93,21 +93,21 @@ export class InsightsService {
     const dauQuery = `
       SELECT COUNT(DISTINCT distinct_id) as count
       FROM events
-      WHERE timestamp >= datetime('now', '-24 hours')
+      WHERE timestamp >= now() - INTERVAL '24 hours'
     `;
 
     // WAU - Last 7 days
     const wauQuery = `
       SELECT COUNT(DISTINCT distinct_id) as count
       FROM events
-      WHERE timestamp >= datetime('now', '-7 days')
+      WHERE timestamp >= now() - INTERVAL '7 days'
     `;
 
     // MAU - Last 30 days
     const mauQuery = `
       SELECT COUNT(DISTINCT distinct_id) as count
       FROM events
-      WHERE timestamp >= datetime('now', '-30 days')
+      WHERE timestamp >= now() - INTERVAL '30 days'
     `;
 
     const [dauResult, wauResult, mauResult] = await Promise.all([
