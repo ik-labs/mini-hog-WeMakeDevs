@@ -5,7 +5,7 @@ export interface Event {
   event: string;
   distinct_id: string;
   timestamp: string;
-  properties?: Record<string, any>;
+  properties?: Record<string, unknown>;
   session_id?: string;
   anonymous_id?: string;
 }
@@ -29,7 +29,7 @@ export interface ActiveUsers {
 export interface QueryResult {
   question: string;
   sql: string;
-  results: any[];
+  results: unknown[];
   insights: string;
   chartSuggestion: string;
   executionTime: number;
@@ -75,7 +75,7 @@ class ApiClient {
     to?: string;
     interval?: 'hour' | 'day' | 'week' | 'month';
   }): Promise<Trend[]> {
-    const searchParams = new URLSearchParams(params as any);
+    const searchParams = new URLSearchParams(params as Record<string, string>);
     return this.request<Trend[]>(`/analytics/trends?${searchParams}`);
   }
 

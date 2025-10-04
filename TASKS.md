@@ -234,13 +234,13 @@
 - [x] 🟢 Add KPI cards: DAU, WAU, MAU
 - [x] 🟢 Fetch stats from `/analytics/active-users`
 - [x] 🟢 Install Recharts
-- [ ] 🔴 Create simple line chart for events over time (24h)
+- [x] 🟢 Create simple line chart for events over time (24h)
 - [x] 🟢 Add "Top Events" list (shows top 5 events with counts)
-- [ ] 🔴 Add auto-refresh (30s interval)
-- [ ] 🔴 Add loading skeletons
+- [x] 🟢 Add auto-refresh (30s interval)
+- [x] 🟢 Add loading skeletons
 
 ### 4.6 Events Explorer Page
-- [ ] 🔴 Create `/app/events/page.tsx`
+- [x] 🟢 Create `/app/analytics/page.tsx` (placeholder for now)
 - [ ] 🔴 Fetch events from backend
 - [ ] 🔴 Display in TanStack Table
 - [ ] 🔴 Add columns: timestamp, event, distinct_id, properties
@@ -251,12 +251,12 @@
 - [ ] 🔴 Make properties column expandable (JSON view)
 
 ### 4.7 Settings Page
-- [ ] 🔴 Create `/app/settings/page.tsx`
-- [ ] 🔴 Display API key (masked, with copy button)
-- [ ] 🔴 Create SDK snippet generator
-- [ ] 🔴 Add code block with syntax highlighting
-- [ ] 🔴 Add "Copy to clipboard" functionality
-- [ ] 🔴 Add Cerebras API key configuration form
+- [x] 🟢 Create `/app/settings/page.tsx`
+- [x] 🟢 Display API key (masked, with copy button)
+- [x] 🟢 Create SDK snippet generator
+- [x] 🟢 Add code block with syntax highlighting
+- [x] 🟢 Add "Copy to clipboard" functionality
+- [ ] 🔴 Add Cerebras API key configuration form (optional)
 
 ---
 
@@ -560,14 +560,14 @@
 - [x] Phase 1: Project Setup & Backend Foundation (59/61 tasks - 97%)
 - [x] Phase 2: Browser SDK Development (20/20 tasks - 100%)
 - [x] Phase 3: AI Module - Cerebras Integration (19/21 tasks - 90%)
-- [x] Phase 4: Frontend - Dashboard & Basic UI (24/37 tasks - 65%)
+- [x] Phase 4: Frontend - Dashboard & Basic UI (30/37 tasks - 81%)
 - [ ] Phase 5: AI-Powered NL Queries UI (0/15 tasks - 0%)
 - [ ] Phase 6: Feature Flags Implementation (0/20 tasks - 0%)
 - [ ] Phase 7: MCP Server & Docker Integration (0/48 tasks - 0%)
 - [ ] Phase 8: Demo App & Documentation (0/52 tasks - 0%)
 
 **Total Tasks: 274**
-**Completed: 122/274 (45%)**
+**Completed: 128/274 (47%)**
 
 ### Daily Progress Log
 
