@@ -11,6 +11,7 @@ import {
   trendsQuerySchema,
   activeUsersQuerySchema,
   topEventsQuerySchema,
+  eventsQuerySchema,
 } from '@minihog/shared';
 import { ZodError } from 'zod';
 
@@ -115,5 +116,31 @@ export class InsightsController {
         top_events: topEvents.events,
       },
     };
+  }
+
+  /**
+   * Get events list with pagination and filters
+   * GET /api/insights/events
+   */
+  @Get('events')
+  @HttpCode(HttpStatus.OK)
+  async getEvents(@Query() query: any) {
+    try {
+      const validatedQuery = eventsQuerySchema.parse(query);
+      const data = await this.insightsService.getEvents(validatedQuery);
+
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new BadRequestException({
+          message: 'Validation failed',
+          errors: error.errors,
+        });
+      }
+      throw error;
+    }
   }
 }

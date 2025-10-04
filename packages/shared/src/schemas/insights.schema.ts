@@ -55,9 +55,23 @@ export const topEventsQuerySchema = z.object({
   to: z.string().datetime().optional(),
 });
 
+/**
+ * Events list query schema
+ */
+export const eventsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+  event_name: z.string().optional(),
+  distinct_id: z.string().optional(),
+  from: z.string().datetime().optional(),
+  to: z.string().datetime().optional(),
+  period: timePeriodSchema.optional(),
+});
+
 // Export types
 export type TimePeriod = z.infer<typeof timePeriodSchema>;
 export type TimeInterval = z.infer<typeof timeIntervalSchema>;
 export type TrendsQuery = z.infer<typeof trendsQuerySchema>;
 export type ActiveUsersQuery = z.infer<typeof activeUsersQuerySchema>;
 export type TopEventsQuery = z.infer<typeof topEventsQuerySchema>;
+export type EventsQuery = z.infer<typeof eventsQuerySchema>;

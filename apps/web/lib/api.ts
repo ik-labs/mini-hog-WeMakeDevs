@@ -26,6 +26,24 @@ export interface ActiveUsers {
   mau: number;
 }
 
+export interface EventRecord {
+  timestamp: string;
+  event: string;
+  distinct_id: string;
+  anonymous_id?: string;
+  properties?: Record<string, unknown>;
+  context?: Record<string, unknown>;
+  session_id?: string;
+}
+
+export interface EventsListResponse {
+  events: EventRecord[];
+  total: number;
+  page: number;
+  limit: number;
+  total_pages: number;
+}
+
 export interface QueryResult {
   question: string;
   sql: string;
@@ -85,6 +103,27 @@ class ApiClient {
 
   async getTopEvents(limit = 10): Promise<TopEvent[]> {
     return this.request<TopEvent[]>(`/analytics/top-events?limit=${limit}`);
+  }
+
+  async getEvents(params?: {
+    page?: number;
+    limit?: number;
+    event_name?: string;
+    distinct_id?: string;
+    from?: string;
+    to?: string;
+    period?: string;
+  }): Promise<EventsListResponse> {
+    const searchParams = new URLSearchParams();
+    Object.entries(params || {}).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        searchParams.append(key, String(value));
+      }
+    });
+    const response = await this.request<{ success: boolean; data: EventsListResponse }>(
+      `/insights/events?${searchParams}`
+    );
+    return response.data;
   }
 
   // AI endpoints

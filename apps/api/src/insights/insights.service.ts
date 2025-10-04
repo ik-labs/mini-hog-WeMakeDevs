@@ -4,11 +4,14 @@ import type {
   TrendsQuery,
   ActiveUsersQuery,
   TopEventsQuery,
+  EventsQuery,
   TrendsResponse,
   ActiveUsersResponse,
   TopEventsResponse,
+  EventsListResponse,
   TimeSeriesDataPoint,
   TopEvent,
+  EventRecord,
 } from '@minihog/shared';
 
 @Injectable()
@@ -170,6 +173,112 @@ export class InsightsService {
       events,
       total_events: totalEvents,
       period: from && to ? undefined : '30d',
+    };
+  }
+
+  /**
+   * Get events list with pagination and filters
+   */
+  async getEvents(query: EventsQuery): Promise<EventsListResponse> {
+    const {
+      page = 1,
+      limit = 20,
+      event_name,
+      distinct_id,
+      from,
+      to,
+      period,
+    } = query;
+
+    // Calculate time range
+    const { fromDate, toDate } = this.calculateTimeRange(from, to, period);
+
+    // Build count query
+    let countSql = `
+      SELECT COUNT(*) as count
+      FROM events
+      WHERE timestamp >= ? AND timestamp <= ?
+    `;
+    const countParams: any[] = [fromDate, toDate];
+
+    if (event_name) {
+      countSql += ` AND event = ?`;
+      countParams.push(event_name);
+    }
+
+    if (distinct_id) {
+      countSql += ` AND distinct_id = ?`;
+      countParams.push(distinct_id);
+    }
+
+    // Build events query
+    let sql = `
+      SELECT 
+        timestamp,
+        event,
+        distinct_id,
+        anonymous_id,
+        properties,
+        context,
+        session_id
+      FROM events
+      WHERE timestamp >= ? AND timestamp <= ?
+    `;
+    const params: any[] = [fromDate, toDate];
+
+    if (event_name) {
+      sql += ` AND event = ?`;
+      params.push(event_name);
+    }
+
+    if (distinct_id) {
+      sql += ` AND distinct_id = ?`;
+      params.push(distinct_id);
+    }
+
+    sql += `
+      ORDER BY timestamp DESC
+      LIMIT ? OFFSET ?
+    `;
+    const offset = (page - 1) * limit;
+    params.push(limit, offset);
+
+    this.logger.debug(`Events query: ${sql}`, params);
+
+    // Execute both queries
+    const [countResult, eventsResult] = await Promise.all([
+      this.duckdb.query<{ count: number }>(countSql, countParams),
+      this.duckdb.query<{
+        timestamp: string;
+        event: string;
+        distinct_id: string;
+        anonymous_id?: string;
+        properties?: string;
+        context?: string;
+        session_id?: string;
+      }>(sql, params),
+    ]);
+
+    const total = countResult[0]?.count || 0;
+    const total_pages = Math.ceil(total / limit);
+
+    // Parse JSON fields
+    const events: EventRecord[] = eventsResult.map((row) => ({
+      timestamp: row.timestamp,
+      event: row.event,
+      distinct_id: row.distinct_id,
+      anonymous_id: row.anonymous_id,
+      properties: row.properties ? JSON.parse(row.properties) : undefined,
+      context: row.context ? JSON.parse(row.context) : undefined,
+      session_id: row.session_id,
+    }));
+
+    return {
+      events,
+      total,
+      page,
+      limit,
+      total_pages,
     };
   }
 

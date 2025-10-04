@@ -67,3 +67,27 @@ export interface UserTimelineResponse {
   events: UserTimelineEvent[];
   total: number;
 }
+
+/**
+ * Event record
+ */
+export interface EventRecord {
+  timestamp: string;
+  event: string;
+  distinct_id: string;
+  anonymous_id?: string;
+  properties?: Record<string, unknown>;
+  context?: Record<string, unknown>;
+  session_id?: string;
+}
+
+/**
+ * Events list response
+ */
+export interface EventsListResponse {
+  events: EventRecord[];
+  total: number;
+  page: number;
+  limit: number;
+  total_pages: number;
+}

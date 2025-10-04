@@ -9,11 +9,18 @@ import { useState } from 'react';
 
 export default function SettingsPage() {
   const [showApiKey, setShowApiKey] = useState(false);
+  const [showCerebrasKey, setShowCerebrasKey] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [cerebrasApiKey, setCerebrasApiKey] = useState('');
+  const [isSavingCerebras, setIsSavingCerebras] = useState(false);
+  const [cerebrasSaved, setCerebrasSaved] = useState(false);
   
   // This would come from environment or user settings
   const apiKey = process.env.NEXT_PUBLIC_API_KEY || 'mh_test_12345678901234567890123456789012';
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  
+  // In a real implementation, this would be fetched from the backend
+  const currentCerebrasKey = process.env.NEXT_PUBLIC_CEREBRAS_API_KEY || 'csk-••••••••••••••••••••••';
 
   const maskedApiKey = showApiKey ? apiKey : apiKey.substring(0, 10) + '••••••••••••••••••••••';
 
@@ -47,6 +54,15 @@ export default function SettingsPage() {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSaveCerebrasKey = async () => {
+    setIsSavingCerebras(true);
+    // In a real implementation, this would make an API call to save the key
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setCerebrasSaved(true);
+    setIsSavingCerebras(false);
+    setTimeout(() => setCerebrasSaved(false), 3000);
   };
 
   return (
@@ -127,7 +143,7 @@ export default function SettingsPage() {
           </Card>
 
           {/* API Endpoint */}
-          <Card>
+          <Card className="mb-6">
             <CardHeader>
               <CardTitle>API Endpoint</CardTitle>
               <CardDescription>
@@ -149,6 +165,79 @@ export default function SettingsPage() {
                   <Copy className="h-4 w-4" />
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Cerebras API Key Configuration */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Cerebras AI Configuration</CardTitle>
+              <CardDescription>
+                Configure your Cerebras API key for natural language queries
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  Current API Key
+                </label>
+                <div className="flex gap-2">
+                  <Input
+                    value={showCerebrasKey ? currentCerebrasKey : 'csk-••••••••••••••••••••••'}
+                    readOnly
+                    className="font-mono text-sm"
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setShowCerebrasKey(!showCerebrasKey)}
+                  >
+                    {showCerebrasKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  Update API Key
+                </label>
+                <div className="flex gap-2">
+                  <Input
+                    type="password"
+                    placeholder="Enter new Cerebras API key..."
+                    value={cerebrasApiKey}
+                    onChange={(e) => setCerebrasApiKey(e.target.value)}
+                    className="font-mono text-sm"
+                  />
+                  <Button
+                    onClick={handleSaveCerebrasKey}
+                    disabled={!cerebrasApiKey || isSavingCerebras}
+                  >
+                    {isSavingCerebras ? 'Saving...' : 'Save'}
+                  </Button>
+                </div>
+                {cerebrasSaved && (
+                  <p className="text-sm text-green-600 mt-2">
+                    Cerebras API key updated successfully!
+                  </p>
+                )}
+              </div>
+
+              <div className="bg-muted p-4 rounded-lg">
+                <p className="text-sm font-medium mb-2">How to get a Cerebras API key:</p>
+                <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
+                  <li>Visit <a href="https://cloud.cerebras.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">cloud.cerebras.ai</a></li>
+                  <li>Sign up or log in to your account</li>
+                  <li>Use promo code: <code className="bg-background px-2 py-0.5 rounded">wemakedevs</code></li>
+                  <li>Navigate to API Keys section</li>
+                  <li>Generate a new API key</li>
+                </ol>
+              </div>
+
+              <p className="text-sm text-muted-foreground">
+                <strong>Note:</strong> In production, this should be configured as an environment variable on the server. 
+                This UI is for demonstration purposes.
+              </p>
             </CardContent>
           </Card>
         </div>

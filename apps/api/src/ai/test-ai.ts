@@ -37,12 +37,12 @@ async function testAiEndpoint() {
       });
 
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json() as { error?: string };
         logger.error(`✗ Failed: ${error.error || response.statusText}`);
         continue;
       }
 
-      const data = await response.json();
+      const data = await response.json() as { data: any };
       const result = data.data;
 
       logger.log(`✓ SQL: ${result.sql}`);
