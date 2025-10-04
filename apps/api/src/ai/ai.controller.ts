@@ -6,9 +6,13 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
+import { IsString, IsNotEmpty, MaxLength } from 'class-validator';
 import { AiService } from './ai.service';
 
 class QueryDto {
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(500)
   question!: string;
 }
 

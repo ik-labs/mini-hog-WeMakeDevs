@@ -168,12 +168,12 @@ export class IngestService {
     );
 
     const last24hResult = await this.duckdb.query<{ count: number }>(
-      "SELECT COUNT(*) as count FROM events WHERE received_at >= datetime('now', '-24 hours')",
+      "SELECT COUNT(*) as count FROM events WHERE received_at >= now() - INTERVAL '24 hours'",
     );
 
     return {
-      total_events: totalResult[0]?.count || 0,
-      last_24h: last24hResult[0]?.count || 0,
+      total_events: Number(totalResult[0]?.count || 0),
+      last_24h: Number(last24hResult[0]?.count || 0),
     };
   }
 }

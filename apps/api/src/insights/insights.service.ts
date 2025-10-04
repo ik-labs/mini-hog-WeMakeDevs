@@ -259,7 +259,7 @@ export class InsightsService {
       }>(sql, params),
     ]);
 
-    const total = countResult[0]?.count || 0;
+    const total = Number(countResult[0]?.count || 0);
     const total_pages = Math.ceil(total / limit);
 
     // Parse JSON fields
