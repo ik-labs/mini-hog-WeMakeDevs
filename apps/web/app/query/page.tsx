@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Sidebar } from '@/components/sidebar';
 import { apiClient, QueryResult } from '@/lib/api';
@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Sparkles, Clock, Database, TrendingUp, Loader2 } from 'lucide-react';
+import { Sparkles, Clock, Database, TrendingUp, Loader2, History } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import {
@@ -45,14 +45,44 @@ const EXAMPLE_QUESTIONS = [
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4'];
 
+interface QueryHistoryItem {
+  question: string;
+  timestamp: number;
+}
+
 export default function QueryPage() {
   const [question, setQuestion] = useState('');
   const [result, setResult] = useState<QueryResult | null>(null);
+  const [queryHistory, setQueryHistory] = useState<QueryHistoryItem[]>([]);
+
+  // Load query history from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem('queryHistory');
+    if (stored) {
+      try {
+        setQueryHistory(JSON.parse(stored));
+      } catch (e) {
+        console.error('Failed to parse query history:', e);
+      }
+    }
+  }, []);
+
+  // Save query to history
+  const saveToHistory = (question: string) => {
+    const newHistory = [
+      { question, timestamp: Date.now() },
+      ...queryHistory.filter((item) => item.question !== question),
+    ].slice(0, 5); // Keep only last 5 unique queries
+    
+    setQueryHistory(newHistory);
+    localStorage.setItem('queryHistory', JSON.stringify(newHistory));
+  };
 
   const mutation = useMutation({
     mutationFn: (question: string) => apiClient.queryNaturalLanguage(question),
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       setResult(data);
+      saveToHistory(variables);
     },
   });
 
@@ -67,6 +97,26 @@ export default function QueryPage() {
     setQuestion(exampleQuestion);
     mutation.mutate(exampleQuestion);
   };
+
+  const handleHistoryClick = (historyQuestion: string) => {
+    setQuestion(historyQuestion);
+    mutation.mutate(historyQuestion);
+  };
+
+  // Keyboard shortcut: Cmd/Ctrl + Enter to submit
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (question.trim()) {
+          mutation.mutate(question);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [question, mutation]);
 
   const renderChart = () => {
     if (!result || !result.results || result.results.length === 0) return null;
@@ -204,13 +254,59 @@ export default function QueryPage() {
                     ))}
                   </div>
                 </div>
+
+                {/* Keyboard Shortcut Hint */}
+                <div className="text-xs text-muted-foreground text-center mt-4">
+                  💡 Tip: Press <kbd className="px-2 py-1 bg-muted rounded border">Cmd</kbd> + <kbd className="px-2 py-1 bg-muted rounded border">Enter</kbd> to submit
+                </div>
               </form>
             </CardContent>
           </Card>
 
+          {/* Query History */}
+          {queryHistory.length > 0 && (
+            <Card className="mb-6">
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <History className="h-5 w-5" />
+                  <CardTitle className="text-lg">Recent Queries</CardTitle>
+                </div>
+                <CardDescription>
+                  Click to re-run a previous query
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {queryHistory.map((item, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleHistoryClick(item.question)}
+                      className="w-full text-left p-3 rounded-lg border hover:bg-accent hover:border-primary transition-colors group"
+                      disabled={mutation.isPending}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-sm flex-1 group-hover:text-primary">
+                          {item.question}
+                        </p>
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">
+                          {new Date(item.timestamp).toLocaleDateString(undefined, {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Loading State */}
           {mutation.isPending && (
-            <Card className="mb-6 border-primary">
+            <Card className="mb-6 border-primary animate-in fade-in-0 slide-in-from-top-2 duration-300">
               <CardContent className="py-8">
                 <div className="flex flex-col items-center justify-center space-y-4">
                   <div className="relative">
@@ -218,12 +314,20 @@ export default function QueryPage() {
                     <div className="absolute inset-0 h-12 w-12 animate-ping">
                       <Sparkles className="h-12 w-12 text-primary opacity-75" />
                     </div>
+                    <div className="absolute -inset-4 h-20 w-20 animate-pulse opacity-20">
+                      <div className="h-full w-full rounded-full bg-primary blur-xl" />
+                    </div>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-semibold mb-1">Generating SQL with AI...</p>
+                    <p className="text-lg font-semibold mb-1 animate-pulse">Generating SQL with AI...</p>
                     <p className="text-sm text-muted-foreground">
                       Powered by Cerebras Cloud + Llama 3.3 70B
                     </p>
+                    <div className="mt-3 flex items-center justify-center gap-1">
+                      <div className="h-2 w-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="h-2 w-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <div className="h-2 w-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -255,7 +359,7 @@ export default function QueryPage() {
 
           {/* Results */}
           {result && !mutation.isPending && (
-            <div className="space-y-6">
+            <div className="space-y-6 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
               {/* Question & Metadata */}
               <Card>
                 <CardHeader>
@@ -322,7 +426,9 @@ export default function QueryPage() {
               {/* Results Table */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Results</CardTitle>
+                  <CardTitle className="text-lg">
+                    {result.results.length === 0 ? 'No Results' : 'Results'}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {result.results.length > 0 ? (
