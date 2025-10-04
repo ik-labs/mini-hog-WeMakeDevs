@@ -8,6 +8,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  // Add BigInt serialization support
+  // @ts-ignore
+  BigInt.prototype.toJSON = function () {
+    return Number(this);
+  };
+
   const adapter = new FastifyAdapter({
     logger: false, // We use pino logger
     bodyLimit: 1048576, // 1MB body limit for event ingestion
