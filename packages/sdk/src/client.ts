@@ -6,6 +6,8 @@ import type {
   MinihogEvent,
 } from './types';
 
+const SDK_VERSION = '0.1.0';
+
 /**
  * Minihog Analytics Client
  */
@@ -18,6 +20,14 @@ export class MinihogClient {
   private flushTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(config: MinihogConfig) {
+    // Validate required config
+    if (!config.endpoint) {
+      throw new Error('[Minihog] endpoint is required');
+    }
+    if (!config.apiKey) {
+      throw new Error('[Minihog] apiKey is required');
+    }
+
     this.config = {
       debug: false,
       maxBatchSize: 10,
@@ -63,6 +73,8 @@ export class MinihogClient {
       distinct_id: this.getDistinctId(),
       properties: {
         ...properties,
+        $sdk_version: SDK_VERSION,
+        $user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
       },
       timestamp: new Date().toISOString(),
       session_id: this.sessionId,
@@ -77,11 +89,14 @@ export class MinihogClient {
    * Track a page view
    */
   page(properties?: PageProperties): void {
+    const utmParams = this.extractUtmParams();
+    
     const pageProperties: PageProperties = {
       title: document.title,
       url: window.location.href,
       path: window.location.pathname,
       referrer: document.referrer || undefined,
+      ...utmParams,
       ...properties,
     };
 
@@ -168,18 +183,33 @@ export class MinihogClient {
     }
   }
 
-  private async sendViaFetch(events: MinihogEvent[]): Promise<void> {
-    const response = await fetch(`${this.config.endpoint}/e`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-Key': this.config.apiKey,
-      },
-      body: JSON.stringify({ events }),
-    });
+  private async sendViaFetch(events: MinihogEvent[], retryCount = 0): Promise<void> {
+    const maxRetries = 3;
+    const baseDelay = 1000; // 1 second
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    try {
+      const response = await fetch(`${this.config.endpoint}/e`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': this.config.apiKey,
+        },
+        body: JSON.stringify({ events }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+    } catch (error) {
+      if (retryCount < maxRetries) {
+        const delay = baseDelay * Math.pow(2, retryCount);
+        this.log(`Retry ${retryCount + 1}/${maxRetries} after ${delay}ms`, {}, 'warn');
+        
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return this.sendViaFetch(events, retryCount + 1);
+      }
+      
+      throw error;
     }
   }
 
@@ -243,6 +273,30 @@ export class MinihogClient {
       const v = c === 'x' ? r : (r & 0x3) | 0x8;
       return v.toString(16);
     });
+  }
+
+  private extractUtmParams(): Record<string, string> {
+    if (typeof window === 'undefined') return {};
+
+    const params = new URLSearchParams(window.location.search);
+    const utmParams: Record<string, string> = {};
+
+    const utmKeys = [
+      'utm_source',
+      'utm_medium',
+      'utm_campaign',
+      'utm_term',
+      'utm_content',
+    ];
+
+    utmKeys.forEach((key) => {
+      const value = params.get(key);
+      if (value) {
+        utmParams[key] = value;
+      }
+    });
+
+    return utmParams;
   }
 
   private log(

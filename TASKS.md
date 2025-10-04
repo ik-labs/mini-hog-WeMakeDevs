@@ -113,36 +113,36 @@
 - [x] 🟢 Add package.json with build scripts
 
 ### 2.2 SDK Core Implementation
-- [ ] 🔴 Implement `init(config)` method
-- [ ] 🔴 Add config validation (endpoint, apiKey required)
-- [ ] 🔴 Implement `track(event, properties)` method
-- [ ] 🔴 Implement `page(properties?)` method (auto-capture URL)
-- [ ] 🔴 Implement `identify(distinctId, traits?)` method
-- [ ] 🔴 Generate anonymous_id using UUID
-- [ ] 🔴 Implement session_id generation and persistence
+- [x] 🟢 Implement `init(config)` method
+- [x] 🟢 Add config validation (endpoint, apiKey required)
+- [x] 🟢 Implement `track(event, properties)` method
+- [x] 🟢 Implement `page(properties?)` method (auto-capture URL)
+- [x] 🟢 Implement `identify(distinctId, traits?)` method
+- [x] 🟢 Generate anonymous_id using UUID
+- [x] 🟢 Implement session_id generation and persistence
 
 ### 2.3 SDK Transport & Batching
-- [ ] 🔴 Implement event queue (in-memory array)
-- [ ] 🔴 Add batching logic (10 events OR 10 seconds)
-- [ ] 🔴 Implement flush() method to send batch
-- [ ] 🔴 Use fetch for normal sends
-- [ ] 🔴 Use navigator.sendBeacon on page unload
-- [ ] 🔴 Add retry logic with exponential backoff
-- [ ] 🔴 Handle network errors gracefully
+- [x] 🟢 Implement event queue (in-memory array)
+- [x] 🟢 Add batching logic (10 events OR 10 seconds)
+- [x] 🟢 Implement flush() method to send batch
+- [x] 🟢 Use fetch for normal sends
+- [x] 🟢 Use navigator.sendBeacon on page unload
+- [x] 🟢 Add retry logic with exponential backoff
+- [x] 🟢 Handle network errors gracefully
 
 ### 2.4 SDK Context & Auto-capture
-- [ ] 🔴 Auto-capture URL, referrer, title on page()
-- [ ] 🔴 Extract UTM parameters from URL
-- [ ] 🔴 Add user-agent string to context
-- [ ] 🔴 Add timestamp (client-side) to all events
-- [ ] 🔴 Include SDK version in context
+- [x] 🟢 Auto-capture URL, referrer, title on page()
+- [x] 🟢 Extract UTM parameters from URL
+- [x] 🟢 Add user-agent string to context
+- [x] 🟢 Add timestamp (client-side) to all events
+- [x] 🟢 Include SDK version in context
 
 ### 2.5 SDK Build & Distribution
-- [ ] 🔴 Build SDK bundle (minified)
-- [ ] 🔴 Generate TypeScript type definitions
-- [ ] 🔴 Test bundle size (target < 10KB gzipped)
-- [ ] 🔴 Create simple test HTML page
-- [ ] 🔴 Verify events reach backend
+- [x] 🟢 Build SDK bundle (minified)
+- [x] 🟢 Generate TypeScript type definitions
+- [x] 🟢 Test bundle size (target < 10KB gzipped)
+- [x] 🟢 Create simple test HTML page
+- [x] 🟢 Verify events reach backend
 
 ---
 

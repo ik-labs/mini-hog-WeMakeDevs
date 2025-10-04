@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minihog SDK Test Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+      background: #f5f5f5;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #667eea;
+      color: white;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    #console {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .log-entry {
+      margin-bottom: 8px;
+      padding: 4px 0;
+      border-bottom: 1px solid #333;
+    }
+
+    .log-time {
+      color: #888;
+      margin-right: 10px;
+    }
+
+    .log-type {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .log-track { color: #4ec9b0; }
+    .log-flush { color: #ce9178; }
+    .log-error { color: #f48771; }
+    .log-info { color: #569cd6; }
+
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+
+    .status.connected {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status.disconnected {
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🚀 Minihog SDK Test</h1>
+    <p class="subtitle">Test the browser analytics SDK with real-time event tracking</p>
+    <span class="status" id="status">Initializing...</span>
+  </div>
+
+  <div class="card">
+    <div class="section-title">📊 Track Events</div>
+    <div class="button-grid">
+      <button onclick="trackPageView()">Track Page View</button>
+      <button onclick="trackButtonClick()">Track Button Click</button>
+      <button onclick="trackCustomEvent()">Track Custom Event</button>
+      <button onclick="trackSignup()">Track Signup</button>
+      <button onclick="trackPurchase()">Track Purchase</button>
+      <button onclick="manualFlush()">Manual Flush</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">👤 User Identification</div>
+    <div class="form-group">
+      <label for="userId">User ID</label>
+      <input type="text" id="userId" placeholder="user_123" value="test_user_001">
+    </div>
+    <div class="form-group">
+      <label for="userName">Name</label>
+      <input type="text" id="userName" placeholder="John Doe" value="Test User">
+    </div>
+    <div class="form-group">
+      <label for="userEmail">Email</label>
+      <input type="email" id="userEmail" placeholder="john@example.com" value="test@example.com">
+    </div>
+    <button onclick="identifyUser()">Identify User</button>
+    <button onclick="resetUser()" style="background: #dc3545; margin-left: 10px;">Reset User</button>
+  </div>
+
+  <div class="card">
+    <div class="section-title">📝 Event Log</div>
+    <div id="console"></div>
+  </div>
+
+  <!-- Load SDK from dist -->
+  <script src="./dist/index.global.js"></script>
+  
+  <script>
+    let minihog;
+    const consoleEl = document.getElementById('console');
+    const statusEl = document.getElementById('status');
+
+    function log(type, message, data) {
+      const time = new Date().toLocaleTimeString();
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = `
+        <span class="log-time">[${time}]</span>
+        <span class="log-type log-${type}">${type.toUpperCase()}</span>
+        ${message}
+        ${data ? `<pre>${JSON.stringify(data, null, 2)}</pre>` : ''}
+      `;
+      consoleEl.insertBefore(entry, consoleEl.firstChild);
+    }
+
+    // Initialize SDK
+    try {
+      minihog = Minihog.init({
+        endpoint: 'http://localhost:3000/api',
+        apiKey: 'mh_test_12345678901234567890123456789012', // Replace with your actual API key
+        debug: true,
+        maxBatchSize: 5, // Lower for testing
+        flushInterval: 15000, // 15 seconds for testing
+      });
+
+      log('info', 'SDK initialized successfully');
+      statusEl.textContent = 'Connected';
+      statusEl.className = 'status connected';
+
+      // Override console methods to capture SDK logs
+      const originalLog = console.log;
+      const originalWarn = console.warn;
+      const originalError = console.error;
+
+      console.log = function(...args) {
+        if (args[0] && args[0].includes('[Minihog]')) {
+          log('info', args.slice(1).map(a => typeof a === 'object' ? '' : a).join(' '), 
+              args.find(a => typeof a === 'object'));
+        }
+        originalLog.apply(console, args);
+      };
+
+      console.warn = function(...args) {
+        if (args[0] && args[0].includes('[Minihog]')) {
+          log('warn', args.slice(1).map(a => typeof a === 'object' ? '' : a).join(' '), 
+              args.find(a => typeof a === 'object'));
+        }
+        originalWarn.apply(console, args);
+      };
+
+      console.error = function(...args) {
+        if (args[0] && args[0].includes('[Minihog]')) {
+          log('error', args.slice(1).map(a => typeof a === 'object' ? '' : a).join(' '), 
+              args.find(a => typeof a === 'object'));
+        }
+        originalError.apply(console, args);
+      };
+
+    } catch (error) {
+      log('error', 'Failed to initialize SDK: ' + error.message);
+      statusEl.textContent = 'Error';
+      statusEl.className = 'status disconnected';
+    }
+
+    // Event tracking functions
+    function trackPageView() {
+      minihog.page({
+        section: 'test-page',
+        variant: 'demo'
+      });
+      log('track', 'Page view tracked', { event: '$pageview' });
+    }
+
+    function trackButtonClick() {
+      minihog.track('button_clicked', {
+        button_name: 'Test Button',
+        location: 'test-page',
+        timestamp: Date.now()
+      });
+      log('track', 'Button click tracked', { event: 'button_clicked' });
+    }
+
+    function trackCustomEvent() {
+      minihog.track('custom_event', {
+        category: 'engagement',
+        action: 'test',
+        value: Math.floor(Math.random() * 100)
+      });
+      log('track', 'Custom event tracked', { event: 'custom_event' });
+    }
+
+    function trackSignup() {
+      minihog.track('signup_completed', {
+        method: 'email',
+        plan: 'free'
+      });
+      log('track', 'Signup tracked', { event: 'signup_completed' });
+    }
+
+    function trackPurchase() {
+      minihog.track('purchase', {
+        product: 'Pro Plan',
+        amount: 29.99,
+        currency: 'USD'
+      });
+      log('track', 'Purchase tracked', { event: 'purchase' });
+    }
+
+    async function manualFlush() {
+      try {
+        await minihog.flush();
+        log('flush', 'Events flushed manually');
+      } catch (error) {
+        log('error', 'Flush failed: ' + error.message);
+      }
+    }
+
+    function identifyUser() {
+      const userId = document.getElementById('userId').value;
+      const userName = document.getElementById('userName').value;
+      const userEmail = document.getElementById('userEmail').value;
+
+      minihog.identify(userId, {
+        name: userName,
+        email: userEmail,
+        plan: 'free'
+      });
+      
+      log('track', 'User identified', { 
+        distinct_id: userId,
+        traits: { name: userName, email: userEmail }
+      });
+    }
+
+    function resetUser() {
+      minihog.reset();
+      log('info', 'User session reset - new anonymous ID generated');
+    }
+
+    // Auto-track some events for demo
+    setTimeout(() => {
+      log('info', 'Auto-tracking initial page view...');
+      // SDK already auto-tracked on init
+    }, 1000);
+  </script>
+</body>
+</html>

@@ -103,6 +103,25 @@ interface MinihogConfig {
 - Safari 14+
 - Modern browsers with ES2020 support
 
+## Testing
+
+Open `test.html` in your browser to test the SDK:
+
+```bash
+# From packages/sdk directory
+npm run build
+open test.html  # or just open in browser
+```
+
+Make sure your API server is running on `http://localhost:3000` and update the API key in test.html.
+
+## Bundle Sizes
+
+- ESM: ~4.2 KB minified
+- CJS: ~4.2 KB minified  
+- IIFE: ~4.3 KB minified
+- All formats < 2KB gzipped
+
 ## License
 
 MIT
