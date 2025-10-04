@@ -47,11 +47,11 @@
 - [x] 🟢 Test basic CRUD operations
 
 ### 1.5 Shared Packages Setup
-- [ ] 🔴 Create `/packages/shared` package
-- [ ] 🔴 Define Zod schemas for events
-- [ ] 🔴 Define Zod schemas for API requests/responses
-- [ ] 🔴 Export shared TypeScript types
-- [ ] 🔴 Export constants (event names, time periods)
+- [x] 🟢 Create `/packages/shared` package
+- [x] 🟢 Define Zod schemas for events
+- [x] 🟢 Define Zod schemas for API requests/responses
+- [x] 🟢 Export shared TypeScript types
+- [x] 🟢 Export constants (event names, time periods)
 
 ### 1.6 Ingest Module (Backend)
 - [ ] 🔴 Create IngestModule with controller and service
