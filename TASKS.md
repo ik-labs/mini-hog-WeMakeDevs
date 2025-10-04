@@ -106,11 +106,11 @@
 **Priority:** HIGH - Required for demo
 
 ### 2.1 SDK Project Setup
-- [ ] 🔴 Create `/packages/sdk` package
-- [ ] 🔴 Set up TypeScript config for browser target
-- [ ] 🔴 Install tsup/rollup for bundling
-- [ ] 🔴 Configure build to output ESM + IIFE
-- [ ] 🔴 Add package.json with build scripts
+- [x] 🟢 Create `/packages/sdk` package
+- [x] 🟢 Set up TypeScript config for browser target
+- [x] 🟢 Install tsup/rollup for bundling
+- [x] 🟢 Configure build to output ESM + IIFE
+- [x] 🟢 Add package.json with build scripts
 
 ### 2.2 SDK Core Implementation
 - [ ] 🔴 Implement `init(config)` method

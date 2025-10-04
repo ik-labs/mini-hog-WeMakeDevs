@@ -61,9 +61,9 @@ async function testCerebras() {
     logger.log('✅ SUCCESS! Cerebras API is working');
     logger.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     logger.log(`Model: ${response.model}`);
-    logger.log(`Response: ${response.choices[0]?.message?.content}`);
+    logger.log(`Response: ${(response.choices as any)?.[0]?.message?.content || 'N/A'}`);
     logger.log(`Duration: ${duration}ms`);
-    logger.log(`Tokens: ${response.usage?.total_tokens || 'N/A'}`);
+    logger.log(`Tokens: ${(response.usage as any)?.total_tokens || 'N/A'}`);
     logger.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     logger.log('');
 
@@ -79,7 +79,7 @@ async function testCerebras() {
 
     for (const model of modelsToTest) {
       try {
-        const testResponse = await client.chat.completions.create({
+        await client.chat.completions.create({
           model,
           messages: [{ role: 'user', content: 'Hi' }],
           max_tokens: 5,
