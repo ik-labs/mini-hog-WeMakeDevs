@@ -22,9 +22,11 @@
     "db:push": "drizzle-kit push:sqlite",
     "db:studio": "drizzle-kit studio",
     "db:seed": "ts-node src/common/database/seed.ts",
-    "db:seed-events": "ts-node src/common/database/seed-events.ts"
+    "db:seed-events": "ts-node src/common/database/seed-events.ts",
+    "test:cerebras": "ts-node src/common/cerebras/test-cerebras.ts"
   },
   "dependencies": {
+    "@cerebras/cerebras_cloud_sdk": "^1.50.0",
     "@duckdb/node-api": "^1.4.0-r.2",
     "@fastify/cors": "^8.5.0",
     "@fastify/helmet": "^11.1.1",

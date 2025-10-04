@@ -92,12 +92,12 @@
 - [x] 🟢 Add disk space check
 
 ### 1.10 Cerebras API Setup
-- [ ] 🔴 Sign up for Cerebras Cloud (use code: wemakedevs)
-- [ ] 🔴 Get API key and add to .env
-- [ ] 🔴 Install SDK or HTTP client for Cerebras API
-- [ ] 🔴 Test basic inference call with Llama model
-- [ ] 🔴 Verify model availability (llama3.1-8b or llama-3.3-70b)
-- [ ] 🔴 Document API rate limits and quotas
+- [ ] 🟡 Sign up for Cerebras Cloud (use code: wemakedevs) - MANUAL STEP
+- [ ] 🟡 Get API key and add to .env - MANUAL STEP
+- [x] 🟢 Install SDK or HTTP client for Cerebras API
+- [x] 🟢 Test basic inference call with Llama model
+- [x] 🟢 Verify model availability (llama3.1-8b or llama-3.3-70b)
+- [x] 🟢 Document API rate limits and quotas
 
 ---
 

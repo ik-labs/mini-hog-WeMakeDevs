@@ -1,0 +1,21 @@
+Please follow these steps to set up Cerebras API:
+
+1. Visit: https://cloud.cerebras.ai/
+2. Sign up for an account
+3. (Optional) Use promo code: wemakedevs
+4. Navigate to API Keys section
+5. Create a new API key
+6. Copy the API key
+7. Add it to your .env file:
+   CEREBRAS_API_KEY=your_key_here
+
+8. Run the test command:
+   cd apps/api && npm run test:cerebras
+
+Available models to use:
+- llama3.1-8b (fast, recommended)
+- llama3.1-70b (more powerful)
+- llama-3.3-70b (latest, most powerful)
+
+Note: You need to manually sign up and get the API key before running the test.
+
