@@ -53,6 +53,39 @@ export interface QueryResult {
   executionTime: number;
 }
 
+export interface FeatureFlag {
+  id: number;
+  key: string;
+  name: string;
+  description?: string;
+  active: boolean;
+  rolloutPercentage: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateFlagInput {
+  key: string;
+  name: string;
+  description?: string;
+  active?: boolean;
+  rollout_percentage?: number;
+}
+
+export interface UpdateFlagInput {
+  name?: string;
+  description?: string;
+  active?: boolean;
+  rollout_percentage?: number;
+}
+
+export interface FlagEvaluation {
+  key: string;
+  enabled: boolean;
+  variant: string;
+  reason: string;
+}
+
 class ApiClient {
   private baseUrl: string;
   private apiKey: string;
@@ -134,6 +167,46 @@ class ApiClient {
         method: 'POST',
         body: JSON.stringify({ question }),
       }
+    );
+    return response.data;
+  }
+
+  // Feature Flags endpoints
+  async getFlags(): Promise<FeatureFlag[]> {
+    const response = await this.request<{ success: boolean; data: FeatureFlag[] }>('/flags');
+    return response.data;
+  }
+
+  async getFlag(key: string): Promise<FeatureFlag> {
+    const response = await this.request<{ success: boolean; data: FeatureFlag }>(`/flags/${key}`);
+    return response.data;
+  }
+
+  async createFlag(flag: CreateFlagInput): Promise<FeatureFlag> {
+    const response = await this.request<{ success: boolean; data: FeatureFlag }>('/flags', {
+      method: 'POST',
+      body: JSON.stringify(flag),
+    });
+    return response.data;
+  }
+
+  async updateFlag(key: string, updates: UpdateFlagInput): Promise<FeatureFlag> {
+    const response = await this.request<{ success: boolean; data: FeatureFlag }>(`/flags/${key}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates),
+    });
+    return response.data;
+  }
+
+  async deleteFlag(key: string): Promise<void> {
+    await this.request<{ success: boolean; message: string }>(`/flags/${key}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async evaluateFlag(key: string, distinctId: string): Promise<FlagEvaluation> {
+    const response = await this.request<{ success: boolean; data: FlagEvaluation }>(
+      `/ff?key=${encodeURIComponent(key)}&distinct_id=${encodeURIComponent(distinctId)}`
     );
     return response.data;
   }

@@ -18,6 +18,8 @@ export class MinihogClient {
   private anonymousId: string;
   private sessionId: string;
   private flushTimer: ReturnType<typeof setTimeout> | null = null;
+  private flagCache: Map<string, { value: boolean; timestamp: number }> = new Map();
+  private readonly FLAG_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   constructor(config: MinihogConfig) {
     // Validate required config
@@ -171,6 +173,100 @@ export class MinihogClient {
       anonymousId: this.anonymousId,
       sessionId: this.sessionId,
     });
+  }
+
+  /**
+   * Get feature flag value for the current user
+   * @param key - Feature flag key
+   * @param defaultValue - Default value if flag is not found or disabled
+   * @returns Promise<boolean> - True if flag is enabled, false otherwise
+   */
+  async getFlag(key: string, defaultValue = false): Promise<boolean> {
+    const distinctId = this.getDistinctId();
+
+    // Check cache first
+    const cached = this.flagCache.get(key);
+    if (cached && Date.now() - cached.timestamp < this.FLAG_CACHE_TTL) {
+      this.log('Flag retrieved from cache', { key, value: cached.value });
+      return cached.value;
+    }
+
+    // Check localStorage for offline support
+    if (typeof localStorage !== 'undefined') {
+      const storageKey = `minihog_flag_${key}_${distinctId}`;
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        try {
+          const { value, timestamp } = JSON.parse(stored);
+          if (Date.now() - timestamp < this.FLAG_CACHE_TTL) {
+            this.flagCache.set(key, { value, timestamp });
+            this.log('Flag retrieved from localStorage', { key, value });
+            return value;
+          }
+        } catch (error) {
+          // Invalid stored data, continue to fetch
+          this.log('Invalid flag data in localStorage', { key, error }, 'warn');
+        }
+      }
+    }
+
+    // Fetch from API
+    try {
+      const response = await fetch(
+        `${this.config.endpoint}/ff?key=${encodeURIComponent(key)}&distinct_id=${encodeURIComponent(distinctId)}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': this.config.apiKey,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      const enabled = result?.data?.enabled ?? defaultValue;
+
+      // Cache the result
+      const cacheEntry = { value: enabled, timestamp: Date.now() };
+      this.flagCache.set(key, cacheEntry);
+
+      // Store in localStorage
+      if (typeof localStorage !== 'undefined') {
+        const storageKey = `minihog_flag_${key}_${distinctId}`;
+        localStorage.setItem(storageKey, JSON.stringify(cacheEntry));
+      }
+
+      this.log('Flag fetched from API', { key, enabled, reason: result?.data?.reason });
+      return enabled;
+    } catch (error) {
+      this.log('Failed to fetch flag', { key, error, defaultValue }, 'warn');
+      return defaultValue;
+    }
+  }
+
+  /**
+   * Clear flag cache (useful for testing or forcing refresh)
+   */
+  clearFlagCache(): void {
+    this.flagCache.clear();
+    
+    // Clear from localStorage
+    if (typeof localStorage !== 'undefined') {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('minihog_flag_')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+    }
+
+    this.log('Flag cache cleared');
   }
 
   // Private methods
