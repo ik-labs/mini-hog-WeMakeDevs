@@ -33,7 +33,7 @@ nano .env
 **Add your Cerebras API key:**
 ```bash
 CEREBRAS_API_KEY=csk-your-key-here
-API_KEY=test_api_key_12345
+API_KEY=YOUR_API_KEY
 ```
 
 Save and exit (Ctrl+X, Y, Enter)
@@ -73,7 +73,7 @@ curl http://localhost:3000/api/health/healthz
 ```bash
 curl -X POST http://localhost:3000/api/ingest/e \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: test_api_key_12345" \
+  -H "X-API-Key: YOUR_API_KEY" \
   -d '{
     "events": [{
       "event": "test_event",
@@ -87,7 +87,7 @@ curl -X POST http://localhost:3000/api/ingest/e \
 ### Test Analytics
 ```bash
 curl http://localhost:3000/api/analytics/active-users \
-  -H "X-API-Key: test_api_key_12345"
+  -H "X-API-Key: YOUR_API_KEY"
 ```
 **Expected:** `{"dau":...,"wau":...,"mau":...}`
 
@@ -95,7 +95,7 @@ curl http://localhost:3000/api/analytics/active-users \
 ```bash
 curl -X POST http://localhost:3000/api/ai/query \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: test_api_key_12345" \
+  -H "X-API-Key: YOUR_API_KEY" \
   -d '{"question": "What are the top events?"}'
 ```
 **Expected:** SQL query + results + insights
@@ -165,7 +165,7 @@ curl http://localhost:3000/api/health/healthz
 for i in {1..5}; do
   curl -X POST http://localhost:3000/api/ingest/e \
     -H "Content-Type: application/json" \
-    -H "X-API-Key: test_api_key_12345" \
+    -H "X-API-Key: YOUR_API_KEY" \
     -d '{
       "events": [{
         "event": "test_'$i'",
@@ -177,12 +177,12 @@ done
 
 # Check analytics
 curl http://localhost:3000/api/analytics/top-events \
-  -H "X-API-Key: test_api_key_12345" | jq
+  -H "X-API-Key: YOUR_API_KEY" | jq
 
 # Test AI
 curl -X POST http://localhost:3000/api/ai/query \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: test_api_key_12345" \
+  -H "X-API-Key: YOUR_API_KEY" \
   -d '{"question": "Show me the event counts"}' | jq
 ```
 
@@ -269,7 +269,7 @@ Try these prompts:
 sqlite3 data/metadata.db "SELECT key FROM api_keys WHERE active=1;"
 
 # Copy the output and use it in all curl commands
-# Replace test_api_key_12345 with your actual key
+# Replace YOUR_API_KEY with your actual key
 ```
 
 **Note:** The API key in `.env` is only used to seed the database on **first startup**. After that, use the key from the database.

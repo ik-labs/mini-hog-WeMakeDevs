@@ -44,7 +44,7 @@ curl http://localhost:3000/api/health/healthz
 ```bash
 curl -X POST http://localhost:3000/api/ingest/e \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: test_api_key_12345" \
+  -H "X-API-Key: YOUR_API_KEY" \
   -d '{
     "events": [{
       "event": "test_event",
@@ -62,7 +62,7 @@ curl -X POST http://localhost:3000/api/ingest/e \
 ### Get Active Users
 ```bash
 curl http://localhost:3000/api/analytics/active-users \
-  -H "X-API-Key: test_api_key_12345"
+  -H "X-API-Key: YOUR_API_KEY"
 ```
 
 **Expected:**
@@ -73,7 +73,7 @@ curl http://localhost:3000/api/analytics/active-users \
 ### Get Top Events
 ```bash
 curl http://localhost:3000/api/analytics/top-events \
-  -H "X-API-Key: test_api_key_12345"
+  -H "X-API-Key: YOUR_API_KEY"
 ```
 
 **Expected:**
@@ -85,7 +85,7 @@ curl http://localhost:3000/api/analytics/top-events \
 ```bash
 curl -X POST http://localhost:3000/api/flags \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: test_api_key_12345" \
+  -H "X-API-Key: YOUR_API_KEY" \
   -d '{
     "key": "test_flag",
     "name": "Test Feature",
@@ -100,7 +100,7 @@ curl -X POST http://localhost:3000/api/flags \
 ### Test Feature Flag - Evaluate
 ```bash
 curl 'http://localhost:3000/api/ff?key=test_flag&distinct_id=user1' \
-  -H "X-API-Key: test_api_key_12345"
+  -H "X-API-Key: YOUR_API_KEY"
 ```
 
 **Expected:**
@@ -112,7 +112,7 @@ curl 'http://localhost:3000/api/ff?key=test_flag&distinct_id=user1' \
 ```bash
 curl -X POST http://localhost:3000/api/ai/query \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: test_api_key_12345" \
+  -H "X-API-Key: YOUR_API_KEY" \
   -d '{
     "question": "What are the top events by count?"
   }'
@@ -208,7 +208,7 @@ Want more data to visualize?
 for i in {1..10}; do
   curl -X POST http://localhost:3000/api/ingest/e \
     -H "Content-Type: application/json" \
-    -H "X-API-Key: test_api_key_12345" \
+    -H "X-API-Key: YOUR_API_KEY" \
     -d '{
       "events": [{
         "event": "event_'$i'",
@@ -264,7 +264,7 @@ npm run dev
 ### Wrong API Key Error
 Check your `.env` has:
 ```bash
-API_KEY=test_api_key_12345
+API_KEY=YOUR_API_KEY
 ```
 
 Then restart API.
@@ -301,4 +301,4 @@ If all tests pass:
 **Quick Reference:**
 - API: http://localhost:3000
 - Web: http://localhost:3001
-- API Key: `test_api_key_12345`
+- API Key: `YOUR_API_KEY`
