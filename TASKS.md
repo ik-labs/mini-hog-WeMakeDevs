@@ -20,14 +20,14 @@
 - [x] 🟢 Configure ESLint + Prettier
 
 ### 1.2 NestJS Backend Setup
-- [ ] 🔴 Initialize NestJS app in `/apps/api`
-- [ ] 🔴 Install dependencies: @nestjs/core, @nestjs/platform-fastify, fastify
-- [ ] 🔴 Configure Fastify adapter instead of Express
-- [ ] 🔴 Set up environment variables (.env + validation)
-- [ ] 🔴 Configure pino logger
-- [ ] 🔴 Add helmet middleware for security
-- [ ] 🔴 Set up CORS configuration
-- [ ] 🔴 Create basic module structure (ingest, insights, flags, ai, mcp, admin, auth, health)
+- [x] 🟢 Initialize NestJS app in `/apps/api`
+- [x] 🟢 Install dependencies: @nestjs/core, @nestjs/platform-fastify, fastify
+- [x] 🟢 Configure Fastify adapter instead of Express
+- [x] 🟢 Set up environment variables (.env + validation)
+- [x] 🟢 Configure pino logger
+- [x] 🟢 Add helmet middleware for security
+- [x] 🟢 Set up CORS configuration
+- [x] 🟢 Create basic module structure (ingest, insights, flags, ai, mcp, admin, auth, health)
 
 ### 1.3 Database Setup - DuckDB
 - [ ] 🔴 Install duckdb npm package
