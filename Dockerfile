@@ -37,6 +37,7 @@ COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=builder /app/packages/shared/node_modules ./packages/shared/node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
+COPY --from=builder /app/packages/shared/package.json ./packages/shared/package.json
 
 # Create data directory for database (will be populated at startup)
 RUN mkdir -p /app/data && chmod 777 /app/data
