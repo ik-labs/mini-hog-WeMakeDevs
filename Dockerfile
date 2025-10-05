@@ -22,8 +22,7 @@ COPY . .
 # Build only API and its dependencies (shared)
 RUN npm run build -- --filter=@minihog/api
 
-# Generate seed data directly to database (no HTTP needed)
-RUN node scripts/seed-direct.js
+# Note: Seed data will be generated at container startup (see CMD below)
 
 # Production image
 FROM node:20-alpine
@@ -47,5 +46,8 @@ EXPOSE 8080
 ENV NODE_ENV=production
 ENV PORT=8080
 
-# Start application
-CMD ["node", "apps/api/dist/main.js"]
+# Create startup script
+COPY --from=builder /app/scripts/seed-direct.js ./scripts/seed-direct.js
+
+# Start application (seed first, then start server)
+CMD sh -c "node scripts/seed-direct.js && node apps/api/dist/main.js"
