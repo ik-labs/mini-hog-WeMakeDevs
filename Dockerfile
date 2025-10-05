@@ -19,8 +19,8 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Build the application
-RUN npm run build
+# Build only API and its dependencies (shared)
+RUN npm run build -- --filter=@minihog/api
 
 # Generate seed data
 RUN npm run seed
