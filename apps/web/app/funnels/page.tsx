@@ -384,32 +384,52 @@ export default function FunnelsPage() {
                   </Card>
 
                   {/* Insights */}
-                  <Card className="border-blue-600/50 bg-blue-950/20">
-                    <CardHeader>
-                      <CardTitle className="text-lg">📊 Key Insights</CardTitle>
+                  <Card className="border-yellow-600 bg-gradient-to-br from-yellow-950/40 to-orange-950/40">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg text-yellow-100 flex items-center gap-2">
+                        <span className="text-2xl">💡</span>
+                        Key Insights
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-2 text-sm">
+                    <CardContent className="space-y-3">
                       {result.steps.map((step, index) => {
                         if (index === 0) return null;
                         const prevStep = result.steps[index - 1];
                         if (step.drop_off_rate > 50) {
                           return (
-                            <p key={step.step} className="text-yellow-400">
-                              ⚠️ High drop-off ({step.drop_off_rate.toFixed(1)}%) from "{prevStep.name}" to "{step.name}"
-                            </p>
+                            <div key={step.step} className="flex items-start gap-3 p-3 rounded-lg bg-yellow-900/30 border border-yellow-700/50">
+                              <span className="text-2xl flex-shrink-0">⚠️</span>
+                              <p className="text-yellow-100 text-sm leading-relaxed">
+                                <span className="font-semibold">High drop-off ({step.drop_off_rate.toFixed(1)}%)</span> from "{prevStep.name}" to "{step.name}"
+                              </p>
+                            </div>
                           );
                         }
                         return null;
                       })}
                       {result.total_conversion_rate < 5 && (
-                        <p className="text-red-400">
-                          🔴 Low overall conversion rate ({result.total_conversion_rate.toFixed(2)}%)
-                        </p>
+                        <div className="flex items-start gap-3 p-3 rounded-lg bg-red-900/30 border border-red-700/50">
+                          <span className="text-2xl flex-shrink-0">🔴</span>
+                          <p className="text-red-100 text-sm leading-relaxed">
+                            <span className="font-semibold">Low overall conversion rate ({result.total_conversion_rate.toFixed(2)}%)</span> - Consider optimizing your funnel steps
+                          </p>
+                        </div>
                       )}
                       {result.total_conversion_rate >= 10 && (
-                        <p className="text-green-400">
-                          🟢 Great conversion rate ({result.total_conversion_rate.toFixed(2)}%)!
-                        </p>
+                        <div className="flex items-start gap-3 p-3 rounded-lg bg-green-900/30 border border-green-700/50">
+                          <span className="text-2xl flex-shrink-0">🟢</span>
+                          <p className="text-green-100 text-sm leading-relaxed">
+                            <span className="font-semibold">Great conversion rate ({result.total_conversion_rate.toFixed(2)}%)!</span> Your funnel is performing well
+                          </p>
+                        </div>
+                      )}
+                      {result.steps.filter((s, i) => i > 0 && s.drop_off_rate <= 50).length > 0 && (
+                        <div className="flex items-start gap-3 p-3 rounded-lg bg-blue-900/30 border border-blue-700/50">
+                          <span className="text-2xl flex-shrink-0">✨</span>
+                          <p className="text-blue-100 text-sm leading-relaxed">
+                            Some steps have <span className="font-semibold">good retention</span> - analyze what's working!
+                          </p>
+                        </div>
                       )}
                     </CardContent>
                   </Card>

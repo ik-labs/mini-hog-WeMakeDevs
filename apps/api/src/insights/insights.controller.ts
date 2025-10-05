@@ -10,21 +10,25 @@ import {
 } from '@nestjs/common';
 import { InsightsService } from './insights.service';
 import { FunnelService } from './funnel.service';
+import { RetentionService } from './retention.service';
 import {
   trendsQuerySchema,
   activeUsersQuerySchema,
   topEventsQuerySchema,
   eventsQuerySchema,
   funnelQuerySchema,
+  retentionQuerySchema,
 } from '@minihog/shared';
 import { ZodError } from 'zod';
 import { FunnelQueryDto } from './dto/funnel.dto';
+import { RetentionQueryDto } from './dto/retention.dto';
 
 @Controller('insights')
 export class InsightsController {
   constructor(
     private readonly insightsService: InsightsService,
     private readonly funnelService: FunnelService,
+    private readonly retentionService: RetentionService,
   ) {}
 
   /**
@@ -162,6 +166,32 @@ export class InsightsController {
     try {
       const validatedQuery = funnelQuerySchema.parse(body);
       const data = await this.funnelService.calculateFunnel(validatedQuery);
+
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new BadRequestException({
+          message: 'Validation failed',
+          errors: error.errors,
+        });
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Calculate cohort retention analysis
+   * POST /api/insights/retention
+   */
+  @Post('retention')
+  @HttpCode(HttpStatus.OK)
+  async calculateRetention(@Body() body: RetentionQueryDto) {
+    try {
+      const validatedQuery = retentionQuerySchema.parse(body);
+      const data = await this.retentionService.calculateRetention(validatedQuery);
 
       return {
         success: true,
