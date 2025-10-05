@@ -1,0 +1,69 @@
+name: minihog
+region: nyc
+
+services:
+  - name: api
+    github:
+      repo: ik-labs/mini-hog-WeMakeDevs
+      branch: main
+      deploy_on_push: true
+    
+    source_dir: /
+    
+    # Build: Install deps, build app, generate seed data
+    build_command: npm install && npm run build && npm run seed
+    
+    # Run: Start the API server
+    run_command: cd apps/api && node dist/main.js
+    
+    http_port: 3000
+    
+    instance_count: 1
+    instance_size_slug: basic-xxs  # $5/month - upgrade to professional-xs ($12) for production
+    
+    routes:
+      - path: /
+    
+    envs:
+      - key: NODE_ENV
+        value: production
+      
+      - key: PORT
+        value: "3000"
+      
+      - key: DATABASE_PATH
+        value: /tmp/analytics.duckdb
+      
+      - key: API_KEY
+        value: mh_live_bf947c81aa941e864d35a23fd3fe9252
+      
+      - key: CORS_ORIGIN
+        value: "*"  # Change to your frontend URL in production
+      
+      - key: LOG_LEVEL
+        value: info
+      
+      # Add your Cerebras API key in the Digital Ocean dashboard
+      # or uncomment and add here:
+      # - key: CEREBRAS_API_KEY
+      #   value: your_cerebras_api_key_here
+      #   type: SECRET
+      
+      - key: CEREBRAS_API_URL
+        value: https://api.cerebras.ai/v1/chat/completions
+
+    health_check:
+      http_path: /health
+      initial_delay_seconds: 30
+      period_seconds: 10
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 3
+
+# Optional: Add alerts
+alerts:
+  - rule: CPU_UTILIZATION
+    value: 80
+  - rule: MEM_UTILIZATION
+    value: 85
+  - rule: DEPLOYMENT_FAILED
