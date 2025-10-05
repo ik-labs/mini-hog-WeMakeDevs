@@ -22,8 +22,8 @@ COPY . .
 # Build only API and its dependencies (shared)
 RUN npm run build -- --filter=@minihog/api
 
-# Generate seed data (requires tsx and scripts)
-RUN npx tsx scripts/seed-data.ts
+# Generate seed data directly to database (no HTTP needed)
+RUN npx tsx scripts/seed-direct.ts
 
 # Production image
 FROM node:20-alpine
