@@ -51,5 +51,6 @@ ENV PORT=8080
 # Create startup script
 COPY --from=builder /app/scripts/seed-direct.js ./scripts/seed-direct.js
 
-# Start application (seed first, then start server)
-CMD sh -c "cd apps/api && node ../../scripts/seed-direct.js && node dist/main.js"
+# Start application
+# Note: Seed database manually after deployment with: curl POST /api/ingest
+CMD ["node", "apps/api/dist/main.js"]
