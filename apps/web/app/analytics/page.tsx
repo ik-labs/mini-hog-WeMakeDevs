@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   useReactTable,
@@ -54,6 +54,12 @@ export default function AnalyticsPage() {
     period: '7d',
   });
 
+  // Local state for input values (for immediate UI updates)
+  const [searchInputs, setSearchInputs] = useState({
+    event_name: '',
+    distinct_id: '',
+  });
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ['events', filters],
     queryFn: () => apiClient.getEvents({
@@ -71,7 +77,30 @@ export default function AnalyticsPage() {
       accessorKey: 'timestamp',
       header: 'Timestamp',
       cell: ({ row }) => {
-        const date = new Date(row.original.timestamp);
+        const timestamp = row.original.timestamp as any;
+        // Handle DuckDB timestamp objects and string timestamps
+        let date;
+        
+        if (typeof timestamp === 'object') {
+          if (timestamp.micros !== undefined) {
+            // DuckDB timestamp with microseconds
+            date = new Date(timestamp.micros / 1000);
+          } else if (timestamp.days !== undefined) {
+            // DuckDB date object
+            const epoch = new Date(1970, 0, 1);
+            date = new Date(epoch.getTime() + timestamp.days * 24 * 60 * 60 * 1000);
+          } else {
+            date = new Date();
+          }
+        } else {
+          date = new Date(timestamp);
+        }
+        
+        // Check if date is valid
+        if (isNaN(date.getTime())) {
+          return <span className="text-muted-foreground text-xs">{JSON.stringify(timestamp)}</span>;
+        }
+        
         return (
           <div className="text-sm">
             <div>{date.toLocaleDateString()}</div>
@@ -150,11 +179,32 @@ export default function AnalyticsPage() {
     pageCount: data?.total_pages || 0,
   });
 
+  // Debounced filter updates for search inputs
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilters((prev) => ({
+        ...prev,
+        event_name: searchInputs.event_name,
+        distinct_id: searchInputs.distinct_id,
+        page: 1, // Reset to page 1 when search changes
+      }));
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timer);
+  }, [searchInputs.event_name, searchInputs.distinct_id]);
+
   const handleFilterChange = (key: keyof EventsFilters, value: string | number) => {
     setFilters((prev) => ({
       ...prev,
       [key]: value,
       page: key === 'page' ? (typeof value === 'number' ? value : Number(value)) : 1, // Reset to page 1 when filters change
+    }));
+  };
+
+  const handleSearchInput = (key: 'event_name' | 'distinct_id', value: string) => {
+    setSearchInputs((prev) => ({
+      ...prev,
+      [key]: value,
     }));
   };
 
@@ -201,8 +251,8 @@ export default function AnalyticsPage() {
                 </label>
                 <Input
                   placeholder="Filter by event..."
-                  value={filters.event_name}
-                  onChange={(e) => handleFilterChange('event_name', e.target.value)}
+                  value={searchInputs.event_name}
+                  onChange={(e) => handleSearchInput('event_name', e.target.value)}
                 />
               </div>
 
@@ -212,8 +262,8 @@ export default function AnalyticsPage() {
                 </label>
                 <Input
                   placeholder="Search by user ID..."
-                  value={filters.distinct_id}
-                  onChange={(e) => handleFilterChange('distinct_id', e.target.value)}
+                  value={searchInputs.distinct_id}
+                  onChange={(e) => handleSearchInput('distinct_id', e.target.value)}
                 />
               </div>
 

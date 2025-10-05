@@ -32,13 +32,16 @@ export function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200',
                 isActive
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
               )}
             >
-              <item.icon className="h-5 w-5" />
+              <item.icon className={cn(
+                "h-5 w-5 transition-all",
+                isActive ? "text-white" : "text-gray-400 group-hover:text-white"
+              )} />
               <span>{item.name}</span>
             </Link>
           );

@@ -107,22 +107,35 @@ export function DashboardContent() {
           ) : trends && trends.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={trends}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#444444" />
                 <XAxis 
-                  dataKey="date" 
-                  tick={{ fontSize: 12 }}
+                  dataKey="timestamp" 
+                  tick={{ fontSize: 12, fill: '#888888' }}
+                  stroke="#444444"
                   tickFormatter={(value) => new Date(value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 />
-                <YAxis tick={{ fontSize: 12 }} />
+                <YAxis 
+                  tick={{ fontSize: 12, fill: '#888888' }} 
+                  stroke="#444444"
+                />
                 <Tooltip 
                   labelFormatter={(value) => new Date(value).toLocaleString()}
+                  contentStyle={{
+                    backgroundColor: 'hsl(var(--background))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '6px',
+                    color: 'hsl(var(--foreground))',
+                  }}
+                  labelStyle={{ color: 'hsl(var(--foreground))' }}
+                  itemStyle={{ color: 'hsl(var(--primary))' }}
                 />
                 <Line 
                   type="monotone" 
                   dataKey="count" 
-                  stroke="hsl(var(--primary))" 
+                  stroke="#3b82f6" 
                   strokeWidth={2}
                   dot={false}
+                  name="Events"
                 />
               </LineChart>
             </ResponsiveContainer>

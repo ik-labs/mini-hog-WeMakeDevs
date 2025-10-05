@@ -127,10 +127,15 @@ IMPORTANT RULES:
 8. Keep queries efficient with proper WHERE clauses
 
 COMMON QUERY PATTERNS:
-- Events over time: SELECT DATE_TRUNC('day', timestamp) as date, COUNT(*) FROM events GROUP BY date
+- Events over time: SELECT DATE_TRUNC('day', timestamp) as date, COUNT(*) as count FROM events WHERE timestamp >= NOW() - INTERVAL '7 days' GROUP BY date ORDER BY date
 - Top events: SELECT event, COUNT(*) as count FROM events GROUP BY event ORDER BY count DESC LIMIT 10
-- Active users: SELECT COUNT(DISTINCT distinct_id) FROM events WHERE timestamp >= NOW() - INTERVAL 1 DAY
-- User timeline: SELECT * FROM events WHERE distinct_id = 'user_id' ORDER BY timestamp DESC
+- Active users: SELECT COUNT(DISTINCT distinct_id) as user_count FROM events WHERE timestamp >= NOW() - INTERVAL '1 day'
+- User timeline: SELECT * FROM events WHERE distinct_id = 'user_id' ORDER BY timestamp DESC LIMIT 100
+
+CRITICAL: 
+- Always use AS aliases for aggregate functions (COUNT(*) as count, SUM() as total, etc.)
+- Always use CAST(DATE_TRUNC(...) AS VARCHAR) for date grouping to ensure proper string formatting
+- Format dates as strings, not objects
 
 OUTPUT FORMAT:
 Return ONLY the SQL query, nothing else. No explanations, no markdown, just the SQL.`;

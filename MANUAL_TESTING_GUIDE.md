@@ -159,7 +159,7 @@ curl http://localhost:3000/api/health/healthz
 ```bash
 curl -X POST http://localhost:3000/api/ingest/e \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: test_api_key_12345" \
+  -H "X-API-Key: dev_minihog_api_key_12345678901234567890" \
   -d '{
     "events": [{
       "event": "manual_test",

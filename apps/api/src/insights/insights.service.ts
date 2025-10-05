@@ -54,8 +54,8 @@ export class InsightsService {
     }
 
     sql += `
-      GROUP BY timestamp
-      ORDER BY timestamp ASC
+      GROUP BY ${timeGrouping}
+      ORDER BY ${timeGrouping} ASC
     `;
 
     this.logger.debug(`Trends query: ${sql}`, params);
@@ -202,13 +202,13 @@ export class InsightsService {
     const countParams: any[] = [fromDate, toDate];
 
     if (event_name) {
-      countSql += ` AND event = ?`;
-      countParams.push(event_name);
+      countSql += ` AND event LIKE ?`;
+      countParams.push(`%${event_name}%`);
     }
 
     if (distinct_id) {
-      countSql += ` AND distinct_id = ?`;
-      countParams.push(distinct_id);
+      countSql += ` AND distinct_id LIKE ?`;
+      countParams.push(`%${distinct_id}%`);
     }
 
     // Build events query
@@ -227,13 +227,13 @@ export class InsightsService {
     const params: any[] = [fromDate, toDate];
 
     if (event_name) {
-      sql += ` AND event = ?`;
-      params.push(event_name);
+      sql += ` AND event LIKE ?`;
+      params.push(`%${event_name}%`);
     }
 
     if (distinct_id) {
-      sql += ` AND distinct_id = ?`;
-      params.push(distinct_id);
+      sql += ` AND distinct_id LIKE ?`;
+      params.push(`%${distinct_id}%`);
     }
 
     sql += `

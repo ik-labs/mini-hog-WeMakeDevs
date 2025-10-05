@@ -72,9 +72,17 @@ export default function FlagsPage() {
   const updateMutation = useMutation({
     mutationFn: ({ key, updates }: { key: string; updates: UpdateFlagInput }) =>
       apiClient.updateFlag(key, updates),
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['flags'] });
-      toast.success('Feature flag updated successfully');
+      
+      // Show specific toast based on what was updated
+      if (variables.updates.rollout_percentage !== undefined) {
+        toast.success(`Rollout percentage updated to ${variables.updates.rollout_percentage}%`);
+      } else if (variables.updates.active !== undefined) {
+        toast.success(`Feature flag ${variables.updates.active ? 'enabled' : 'disabled'}`);
+      } else {
+        toast.success('Feature flag updated successfully');
+      }
     },
     onError: (error: Error) => {
       toast.error(`Failed to update flag: ${error.message}`);
@@ -325,7 +333,7 @@ export default function FlagsPage() {
                         value={[flag.rolloutPercentage]}
                         onValueChange={(value) => handleRolloutChange(flag, value)}
                         max={100}
-                        step={1}
+                        step={10}
                         className="w-full"
                       />
                       <p className="text-xs text-muted-foreground">

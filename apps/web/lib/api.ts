@@ -11,7 +11,7 @@ export interface Event {
 }
 
 export interface Trend {
-  date: string;
+  timestamp: string;
   count: number;
 }
 
@@ -127,15 +127,18 @@ class ApiClient {
     interval?: 'hour' | 'day' | 'week' | 'month';
   }): Promise<Trend[]> {
     const searchParams = new URLSearchParams(params as Record<string, string>);
-    return this.request<Trend[]>(`/insights/trends?${searchParams}`);
+    const response = await this.request<{ success: boolean; data: { series: Trend[], total: number } }>(`/insights/trends?${searchParams}`);
+    return response.data.series;
   }
 
   async getActiveUsers(): Promise<ActiveUsers> {
-    return this.request<ActiveUsers>('/insights/active-users');
+    const response = await this.request<{ success: boolean; data: ActiveUsers }>('/insights/active-users');
+    return response.data;
   }
 
   async getTopEvents(limit = 10): Promise<TopEvent[]> {
-    return this.request<TopEvent[]>(`/insights/top-events?limit=${limit}`);
+    const response = await this.request<{ success: boolean; data: { events: TopEvent[], total_events: number } }>(`/insights/top-events?limit=${limit}`);
+    return response.data.events;
   }
 
   async getEvents(params?: {

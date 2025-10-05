@@ -36,11 +36,14 @@ import {
 } from 'recharts';
 
 const EXAMPLE_QUESTIONS = [
-  'How many events happened today?',
-  'What are the top 5 events by count?',
-  'How many unique users do we have?',
-  'Show me events over the last 7 days',
-  'What is the most popular event this week?',
+  'How many events happened in the last 7 days?',
+  'Show me daily active users for the past 30 days',
+  'What are the top 10 events by count with their user counts?',
+  'Compare page views vs clicks over the last week',
+  'Which users have the most events in the last month?',
+  'Show me conversion funnel: pageview → product_viewed → add_to_cart → purchase',
+  'What percentage of users who viewed products actually purchased?',
+  'Find users who signed up in the last week but haven\'t logged in',
 ];
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4'];
@@ -124,38 +127,190 @@ export default function QueryPage() {
     const chartType = result.chartSuggestion?.toLowerCase() || 'table';
     const data = result.results;
 
+    // Detect if we have multiple numeric columns (comparison queries)
+    const firstRow = data[0];
+    const numericColumns = Object.keys(firstRow).filter(key => {
+      const value = firstRow[key];
+      return typeof value === 'number' && key !== 'count_star()';
+    });
+
     // Prepare data for charts
-    const chartData = data.map((row, index) => ({
-      ...row,
-      name: row.event || row.date || row.timestamp || row.distinct_id || `Item ${index + 1}`,
-      value: row.count || row.total || row.value || 0,
-    }));
+    const chartData = data.map((row, index) => {
+      // Extract count value from various possible column names
+      const countValue = 
+        row.count || 
+        row.total || 
+        row.value || 
+        row['count_star()'] || 
+        row.user_count ||
+        row.event_count ||
+        0;
+      
+      // Extract name/label - handle date objects
+      let name = row.event || row.distinct_id || `Item ${index + 1}`;
+      
+      // Handle date column - check if it's an object or string
+      if (row.date) {
+        if (typeof row.date === 'object' && row.date.days !== undefined) {
+          // Convert DuckDB date object to readable format
+          const epoch = new Date(1970, 0, 1);
+          const date = new Date(epoch.getTime() + row.date.days * 24 * 60 * 60 * 1000);
+          name = date.toLocaleDateString();
+        } else {
+          name = row.date;
+        }
+      } else if (row.timestamp) {
+        if (typeof row.timestamp === 'object' && row.timestamp.days !== undefined) {
+          const epoch = new Date(1970, 0, 1);
+          const date = new Date(epoch.getTime() + row.timestamp.days * 24 * 60 * 60 * 1000);
+          name = date.toLocaleDateString();
+        } else {
+          name = row.timestamp;
+        }
+      }
+      
+      return {
+        ...row,
+        name,
+        value: Number(countValue),
+      };
+    });
 
     if (chartType.includes('line') || chartType.includes('trend')) {
+      // Check if we have multiple numeric columns for comparison
+      if (numericColumns.length > 1) {
+        return (
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#444444" />
+              <XAxis 
+                dataKey="name" 
+                tick={{ fontSize: 12, fill: '#888888' }}
+                stroke="#444444"
+              />
+              <YAxis 
+                tick={{ fontSize: 12, fill: '#888888' }}
+                stroke="#444444"
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: '#1f2937',
+                  border: '1px solid #374151',
+                  borderRadius: '6px',
+                  color: '#f3f4f6',
+                }}
+                labelStyle={{ color: '#f3f4f6' }}
+              />
+              <Legend wrapperStyle={{ color: '#888888' }} />
+              {numericColumns.map((col, idx) => (
+                <Line 
+                  key={col}
+                  type="monotone" 
+                  dataKey={col} 
+                  stroke={COLORS[idx % COLORS.length]} 
+                  strokeWidth={3} 
+                  dot={{ fill: COLORS[idx % COLORS.length], r: 4 }}
+                  name={col.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        );
+      }
+      
       return (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={2} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#444444" />
+            <XAxis 
+              dataKey="name" 
+              tick={{ fontSize: 12, fill: '#888888' }}
+              stroke="#444444"
+            />
+            <YAxis 
+              tick={{ fontSize: 12, fill: '#888888' }}
+              stroke="#444444"
+            />
+            <Tooltip 
+              contentStyle={{
+                backgroundColor: '#1f2937',
+                border: '1px solid #374151',
+                borderRadius: '6px',
+                color: '#f3f4f6',
+              }}
+              labelStyle={{ color: '#f3f4f6' }}
+            />
+            <Legend wrapperStyle={{ color: '#888888' }} />
+            <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={3} dot={{ fill: '#3b82f6', r: 4 }} name="Events" />
           </LineChart>
         </ResponsiveContainer>
       );
     }
 
     if (chartType.includes('bar')) {
+      // Check if we have multiple numeric columns for comparison
+      if (numericColumns.length > 1) {
+        return (
+          <ResponsiveContainer width="100%" height={400}>
+            <BarChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#444444" />
+              <XAxis 
+                dataKey="name" 
+                tick={{ fontSize: 12, fill: '#888888' }}
+                stroke="#444444"
+              />
+              <YAxis 
+                tick={{ fontSize: 12, fill: '#888888' }}
+                stroke="#444444"
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: '#1f2937',
+                  border: '1px solid #374151',
+                  borderRadius: '6px',
+                  color: '#f3f4f6',
+                }}
+                labelStyle={{ color: '#f3f4f6' }}
+              />
+              <Legend wrapperStyle={{ color: '#888888' }} />
+              {numericColumns.map((col, idx) => (
+                <Bar 
+                  key={col}
+                  dataKey={col} 
+                  fill={COLORS[idx % COLORS.length]} 
+                  radius={[8, 8, 0, 0]}
+                  name={col.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        );
+      }
+      
       return (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={400}>
           <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="value" fill="#3b82f6" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#444444" />
+            <XAxis 
+              dataKey="name" 
+              tick={{ fontSize: 12, fill: '#888888' }}
+              stroke="#444444"
+            />
+            <YAxis 
+              tick={{ fontSize: 12, fill: '#888888' }}
+              stroke="#444444"
+            />
+            <Tooltip 
+              contentStyle={{
+                backgroundColor: '#1f2937',
+                border: '1px solid #374151',
+                borderRadius: '6px',
+                color: '#f3f4f6',
+              }}
+              labelStyle={{ color: '#f3f4f6' }}
+            />
+            <Legend wrapperStyle={{ color: '#888888' }} />
+            <Bar dataKey="value" fill="#3b82f6" radius={[8, 8, 0, 0]} name="Events" />
           </BarChart>
         </ResponsiveContainer>
       );
@@ -163,15 +318,15 @@ export default function QueryPage() {
 
     if (chartType.includes('pie')) {
       return (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={400}>
           <PieChart>
             <Pie
               data={chartData}
               cx="50%"
               cy="50%"
-              labelLine={false}
-              label={(entry) => `${entry.name}: ${entry.value}`}
-              outerRadius={100}
+              labelLine={{ stroke: '#888888' }}
+              label={({ name, value, percent }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
+              outerRadius={120}
               fill="#8884d8"
               dataKey="value"
             >
@@ -179,7 +334,15 @@ export default function QueryPage() {
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip 
+              contentStyle={{
+                backgroundColor: '#1f2937',
+                border: '1px solid #374151',
+                borderRadius: '6px',
+                color: '#f3f4f6',
+              }}
+            />
+            <Legend wrapperStyle={{ color: '#888888' }} />
           </PieChart>
         </ResponsiveContainer>
       );
