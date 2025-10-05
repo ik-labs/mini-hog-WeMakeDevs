@@ -225,7 +225,7 @@ function generateEvent(): any {
 
 // Send events in batches
 async function sendBatch(events: any[]): Promise<void> {
-  const response = await fetch(`${API_URL}/ingest/e`, {
+  const response = await fetch(`${API_URL}/api/ingest/e`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
