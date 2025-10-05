@@ -1,8 +1,8 @@
-# Use Node.js 20 Alpine for smaller image
-FROM node:20-alpine AS builder
+# Use Node.js 20 Slim (Debian-based) for DuckDB native bindings
+FROM node:20-slim AS builder
 
 # Install build dependencies
-RUN apk add --no-cache python3 make g++
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
@@ -24,8 +24,8 @@ RUN npm run build -- --filter=@minihog/api
 
 # Note: Seed data will be generated at container startup (see CMD below)
 
-# Production image
-FROM node:20-alpine
+# Production image (Debian-based for glibc compatibility)
+FROM node:20-slim
 
 WORKDIR /app
 
