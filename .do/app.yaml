@@ -11,10 +11,13 @@ services:
     source_dir: /
     
     # Build: Install deps, build app, generate seed data
-    build_command: npm install && npm run build && npm run seed
+    build_command: npm ci --include=dev && npm run build && npm run seed
     
     # Run: Start the API server
     run_command: cd apps/api && node dist/main.js
+    
+    # Dockerfile build for better control (alternative)
+    # dockerfile_path: Dockerfile
     
     http_port: 3000
     
