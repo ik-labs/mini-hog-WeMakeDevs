@@ -23,7 +23,7 @@ COPY . .
 RUN npm run build -- --filter=@minihog/api
 
 # Generate seed data directly to database (no HTTP needed)
-RUN npx tsx scripts/seed-direct.ts
+RUN node scripts/seed-direct.js
 
 # Production image
 FROM node:20-alpine
