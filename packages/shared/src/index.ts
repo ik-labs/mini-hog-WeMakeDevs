@@ -2,6 +2,7 @@
 export * from './schemas/event.schema';
 export * from './schemas/insights.schema';
 export * from './schemas/flags.schema';
+export * from './schemas/funnel.schema';
 
 // Constants
 export * from './constants/events';

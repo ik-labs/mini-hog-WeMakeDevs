@@ -1,23 +1,31 @@
 import {
   Controller,
   Get,
+  Post,
   Query,
+  Body,
   HttpCode,
   HttpStatus,
   BadRequestException,
 } from '@nestjs/common';
 import { InsightsService } from './insights.service';
+import { FunnelService } from './funnel.service';
 import {
   trendsQuerySchema,
   activeUsersQuerySchema,
   topEventsQuerySchema,
   eventsQuerySchema,
+  funnelQuerySchema,
 } from '@minihog/shared';
 import { ZodError } from 'zod';
+import { FunnelQueryDto } from './dto/funnel.dto';
 
 @Controller('insights')
 export class InsightsController {
-  constructor(private readonly insightsService: InsightsService) {}
+  constructor(
+    private readonly insightsService: InsightsService,
+    private readonly funnelService: FunnelService,
+  ) {}
 
   /**
    * Get trends - event counts over time
@@ -128,6 +136,32 @@ export class InsightsController {
     try {
       const validatedQuery = eventsQuerySchema.parse(query);
       const data = await this.insightsService.getEvents(validatedQuery);
+
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new BadRequestException({
+          message: 'Validation failed',
+          errors: error.errors,
+        });
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Calculate funnel conversion rates
+   * POST /api/insights/funnel
+   */
+  @Post('funnel')
+  @HttpCode(HttpStatus.OK)
+  async calculateFunnel(@Body() body: FunnelQueryDto) {
+    try {
+      const validatedQuery = funnelQuerySchema.parse(body);
+      const data = await this.funnelService.calculateFunnel(validatedQuery);
 
       return {
         success: true,
