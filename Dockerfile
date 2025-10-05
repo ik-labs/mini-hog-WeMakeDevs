@@ -52,4 +52,4 @@ ENV PORT=8080
 COPY --from=builder /app/scripts/seed-direct.js ./scripts/seed-direct.js
 
 # Start application (seed first, then start server)
-CMD sh -c "NODE_PATH=/app/apps/api/node_modules:/app/node_modules node scripts/seed-direct.js && node apps/api/dist/main.js"
+CMD sh -c "cd apps/api && node ../../scripts/seed-direct.js && node dist/main.js"
